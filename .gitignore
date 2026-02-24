@@ -45,6 +45,7 @@ app.*.map.json
 /android/app/release
 
 # Sensitive credentials & API Keys
+*.apk
 .env
 *.env
 android/app/google-services.json
