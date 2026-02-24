@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/theme.dart';
+import '../../../core/design/tokens.dart';
+import '../../../core/widgets/app_text_field.dart';
 
 class ContentCreatorModal {
   static void show(BuildContext context) {
@@ -40,21 +41,21 @@ class _CreatePostViewState extends State<_CreatePostView> {
     
     return Container(
       decoration: const BoxDecoration(
-        color: AppTheme.surfaceWhite,
+        color: AppTokens.backgroundLight,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(AppTheme.radiusCard),
-          topRight: Radius.circular(AppTheme.radiusCard),
+          topLeft: Radius.circular(AppTokens.radiusCard),
+          topRight: Radius.circular(AppTokens.radiusCard),
         ),
       ),
       margin: const EdgeInsets.only(top: kToolbarHeight),
-      padding: EdgeInsets.fromLTRB(AppTheme.spacingMd, AppTheme.spacingMd, AppTheme.spacingMd, bottomInset + AppTheme.spacingMd),
+      padding: EdgeInsets.fromLTRB(AppTokens.spacingMd, AppTokens.spacingMd, AppTokens.spacingMd, bottomInset + AppTokens.spacingMd),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
             child: Container(
-              margin: const EdgeInsets.only(bottom: AppTheme.spacingMd),
+              margin: const EdgeInsets.only(bottom: AppTokens.spacingMd),
               width: 40,
               height: 5,
               decoration: BoxDecoration(
@@ -66,17 +67,17 @@ class _CreatePostViewState extends State<_CreatePostView> {
           _buildHeader(context),
           const Divider(),
           _buildDestinationToggle(),
-          const SizedBox(height: AppTheme.spacingMd),
+          const SizedBox(height: AppTokens.spacingMd),
           _buildContentTypePicker(),
-          const SizedBox(height: AppTheme.spacingMd),
+          const SizedBox(height: AppTokens.spacingMd),
           Flexible(
             child: SingleChildScrollView(
               child: _buildDynamicContentEditor(),
             ),
           ),
-          const SizedBox(height: AppTheme.spacingMd),
+          const SizedBox(height: AppTokens.spacingMd),
           _buildPinToggle(),
-          const SizedBox(height: AppTheme.spacingMd),
+          const SizedBox(height: AppTokens.spacingMd),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
@@ -87,7 +88,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
                 );
               },
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primaryStatusGreen,
+                backgroundColor: AppTokens.primaryOlive,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -118,7 +119,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
     return Row(
       children: [
         Text('Post to: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
-        const SizedBox(width: AppTheme.spacingSm),
+        const SizedBox(width: AppTokens.spacingSm),
         Expanded(
           child: DropdownButton<String>(
             isExpanded: true,
@@ -151,21 +152,21 @@ class _CreatePostViewState extends State<_CreatePostView> {
           final type = _contentTypes[index];
           final isSelected = _selectedContentType == type['label'];
           return Padding(
-            padding: const EdgeInsets.only(right: AppTheme.spacingSm),
+            padding: const EdgeInsets.only(right: AppTokens.spacingSm),
             child: ChoiceChip(
               label: Row(
                 children: [
-                  Icon(type['icon'], size: 16, color: isSelected ? Colors.white : AppTheme.textPrimary),
+                  Icon(type['icon'], size: 16, color: isSelected ? Colors.white : AppTokens.textPrimary),
                   const SizedBox(width: 4),
-                  Text(type['label'], style: TextStyle(color: isSelected ? Colors.white : AppTheme.textPrimary)),
+                  Text(type['label'], style: TextStyle(color: isSelected ? Colors.white : AppTokens.textPrimary)),
                 ],
               ),
               selected: isSelected,
               onSelected: (selected) {
                 setState(() => _selectedContentType = type['label']);
               },
-              selectedColor: AppTheme.primaryStatusGreen,
-              backgroundColor: AppTheme.backgroundLight,
+              selectedColor: AppTokens.primaryOlive,
+              backgroundColor: AppTokens.surfaceElevated,
             ),
           );
         },
@@ -178,8 +179,8 @@ class _CreatePostViewState extends State<_CreatePostView> {
       title: const Text('Pin this post'),
       subtitle: Text('Pin to top of $_selectedDestination'),
       value: _isPinned,
-      activeThumbColor: AppTheme.primaryStatusGreen,
-      activeTrackColor: AppTheme.primaryStatusGreen.withValues(alpha: 0.3),
+      activeThumbColor: AppTokens.primaryOlive,
+      activeTrackColor: AppTokens.primaryOlive.withValues(alpha: 0.3),
       onChanged: (bool value) {
         setState(() {
           _isPinned = value;
@@ -194,19 +195,19 @@ class _CreatePostViewState extends State<_CreatePostView> {
         return Column(
           children: [
             _buildTextField(),
-            const SizedBox(height: AppTheme.spacingMd),
+            const SizedBox(height: AppTokens.spacingMd),
             Container(
               height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppTheme.backgroundLight,
-                border: Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
-                borderRadius: BorderRadius.circular(AppTheme.radiusCard),
+                color: AppTokens.surfaceElevated,
+                border: Border.all(color: AppTokens.textSecondary.withValues(alpha: 0.3)),
+                borderRadius: BorderRadius.circular(AppTokens.radiusCard),
               ),
               child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add_photo_alternate, size: 40, color: AppTheme.textSecondary),
+                  Icon(Icons.add_photo_alternate, size: 40, color: AppTokens.textSecondary),
                   SizedBox(height: 8),
                   Text('Tap to select an image (Max 1)'),
                 ],
@@ -217,39 +218,36 @@ class _CreatePostViewState extends State<_CreatePostView> {
       case 'Poll':
         return Column(
           children: [
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Ask a question...',
-                border: OutlineInputBorder(),
-              ),
+            const AppTextField(
+              labelText: 'Ask a question...',
               maxLines: 2,
             ),
-            const SizedBox(height: AppTheme.spacingSm),
+            const SizedBox(height: AppTokens.spacingSm),
             _buildPollOptionField('Option 1'),
             _buildPollOptionField('Option 2'),
             TextButton.icon(
               onPressed: () {},
-              icon: const Icon(Icons.add, color: AppTheme.primaryStatusGreen),
-              label: const Text('Add Option', style: TextStyle(color: AppTheme.primaryStatusGreen)),
+              icon: const Icon(Icons.add, color: AppTokens.primaryOlive),
+              label: const Text('Add Option', style: TextStyle(color: AppTokens.primaryOlive)),
             ),
           ],
         );
       case 'Voice':
         return Container(
-          padding: const EdgeInsets.all(AppTheme.spacingLg),
+          padding: const EdgeInsets.all(AppTokens.spacingLg),
           alignment: Alignment.center,
           child: Column(
             children: [
-              const Icon(Icons.mic, size: 64, color: AppTheme.statusRed),
-              const SizedBox(height: AppTheme.spacingMd),
+              const Icon(Icons.mic, size: 64, color: AppTokens.statusRed),
+              const SizedBox(height: AppTokens.spacingMd),
               const Text('00:00', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-              const SizedBox(height: AppTheme.spacingLg),
+              const SizedBox(height: AppTokens.spacingLg),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   IconButton(icon: const Icon(Icons.refresh), onPressed: () {}),
                   FloatingActionButton(
-                    backgroundColor: AppTheme.statusRed,
+                    backgroundColor: AppTokens.statusRed,
                     onPressed: () {},
                     child: const Icon(Icons.stop, color: Colors.white),
                   ),
@@ -263,17 +261,17 @@ class _CreatePostViewState extends State<_CreatePostView> {
         return Column(
           children: [
             _buildTextField(),
-            const SizedBox(height: AppTheme.spacingMd),
+            const SizedBox(height: AppTokens.spacingMd),
             Container(
-              padding: const EdgeInsets.all(AppTheme.spacingMd),
+              padding: const EdgeInsets.all(AppTokens.spacingMd),
               decoration: BoxDecoration(
-                color: AppTheme.backgroundLight,
-                borderRadius: BorderRadius.circular(AppTheme.radiusInput),
+                color: AppTokens.surfaceElevated,
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.video_library, color: AppTheme.textSecondary),
-                  SizedBox(width: AppTheme.spacingMd),
+                  Icon(Icons.video_library, color: AppTokens.textSecondary),
+                  SizedBox(width: AppTokens.spacingMd),
                   Expanded(child: Text('Pick from Web-Uploaded Library')),
                   Icon(Icons.chevron_right),
                 ],
@@ -288,24 +286,17 @@ class _CreatePostViewState extends State<_CreatePostView> {
   }
 
   Widget _buildTextField() {
-    return TextField(
-      decoration: InputDecoration(
-        hintText: 'What\'s on your mind?',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppTheme.radiusInput)),
-      ),
+    return const AppTextField(
+      labelText: 'What\'s on your mind?',
       maxLines: 5,
     );
   }
 
   Widget _buildPollOptionField(String hint) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppTheme.spacingSm),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppTheme.radiusInput)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd, vertical: AppTheme.spacingSm),
-        ),
+      padding: const EdgeInsets.only(bottom: AppTokens.spacingSm),
+      child: AppTextField(
+        labelText: hint,
       ),
     );
   }

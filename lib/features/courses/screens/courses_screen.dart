@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/localization/localization_provider.dart';
-import '../../../core/theme/theme.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/design/tokens.dart';
 import '../../../core/mock_data/mock_data.dart';
+import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_empty_state.dart';
+import '../../../core/widgets/status_badge.dart';
 
 class CoursesScreen extends StatelessWidget {
   const CoursesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final loc = context.watch<LocalizationProvider>();
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -20,7 +21,7 @@ class CoursesScreen extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                color: AppTheme.surfaceWhite,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -31,9 +32,9 @@ class CoursesScreen extends StatelessWidget {
                 ],
               ),
               child: const TabBar(
-                labelColor: AppTheme.primaryStatusGreen,
-                unselectedLabelColor: AppTheme.textSecondary,
-                indicatorColor: AppTheme.primaryStatusGreen,
+                labelColor: AppTokens.primaryOlive,
+                unselectedLabelColor: AppTokens.textSecondary,
+                indicatorColor: AppTokens.primaryOlive,
                 indicatorSize: TabBarIndicatorSize.label,
                 dividerHeight: 0,
                 tabs: [
@@ -45,8 +46,8 @@ class CoursesScreen extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  _buildCoursesList(context, 'Published'),
-                  _buildCoursesList(context, 'Draft'),
+                  _buildCoursesGrid(context, 'Published'),
+                  _buildCoursesGrid(context, 'Draft'),
                 ],
               ),
             ),
@@ -56,105 +57,98 @@ class CoursesScreen extends StatelessWidget {
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create Course Flow')));
           },
-          backgroundColor: AppTheme.primaryStatusGreen,
+          backgroundColor: AppTokens.primaryOlive,
           child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
   }
 
-  Widget _buildCoursesList(BuildContext context, String filterStatus) {
+  Widget _buildCoursesGrid(BuildContext context, String filterStatus) {
     final filtered = MockData.courses.where((c) => c['status'] == filterStatus).toList();
 
     if (filtered.isEmpty) {
-      return const Center(child: Text('No courses found.'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.video_library, size: 60, color: AppTokens.textSecondary.withValues(alpha: 0.3)),
+            const SizedBox(height: AppTokens.spacingMd),
+            Text('No courses found', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppTokens.textSecondary)),
+          ],
+        ),
+      );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppTheme.spacingMd),
+    return GridView.builder(
+      padding: const EdgeInsets.all(AppTokens.spacingMd),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: AppTokens.spacingMd,
+        mainAxisSpacing: AppTokens.spacingMd,
+        childAspectRatio: 0.75,
+      ),
       itemCount: filtered.length,
       itemBuilder: (context, index) {
         final course = filtered[index];
         final bool isPublished = filterStatus == 'Published';
-        final double progress = index % 2 == 0 ? 0.8 : 0.35; // Mock progress logic
+        final double progress = index % 2 == 0 ? 0.8 : 0.35;
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: AppTheme.spacingLg),
-          decoration: BoxDecoration(
-            color: AppTheme.surfaceWhite,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-            border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-          ),
+        return AppCard(
+          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.network(
-                  'https://picsum.photos/seed/${course['title']}/400/200',
-                  height: 140,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(AppTokens.radiusCard)),
+                child: CachedNetworkImage(
+                  imageUrl: 'https://picsum.photos/seed/${course['title'].hashCode}/400/300',
+                  height: 100,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(color: AppTokens.textSecondary.withValues(alpha: 0.1)),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(AppTheme.spacingMd),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            course['title'],
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${course['price']} • ${course['students']} Enrolled',
-                            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
-                          ),
-                          if (isPublished) ...[
-                            const SizedBox(height: AppTheme.spacingSm),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: LinearProgressIndicator(
-                                      value: progress,
-                                      backgroundColor: AppTheme.primaryStatusGreen.withValues(alpha: 0.2),
-                                      color: AppTheme.primaryStatusGreen,
-                                      minHeight: 6,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: AppTheme.spacingSm),
-                                Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppTheme.primaryStatusGreen)),
-                              ],
-                            ),
-                          ],
-                        ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppTokens.spacingSm),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course['title'],
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizedBox(width: AppTheme.spacingMd),
-                    IconButton(
-                      icon: const Icon(Icons.edit_note, color: AppTheme.textSecondary, size: 28),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Edit Course Open')));
-                      },
-                    ),
-                  ],
+                      const SizedBox(height: AppTokens.spacingXs),
+                      Text(
+                        '${course['price']}',
+                        style: const TextStyle(color: AppTokens.primaryOlive, fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      if (isPublished) ...[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+                                child: LinearProgressIndicator(
+                                  value: progress,
+                                  backgroundColor: AppTokens.primaryOlive.withValues(alpha: 0.2),
+                                  color: AppTokens.primaryOlive,
+                                  minHeight: 4,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: AppTokens.spacingXs),
+                            Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTokens.primaryOlive)),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             ],

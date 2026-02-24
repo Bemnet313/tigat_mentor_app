@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/theme/theme.dart';
-import '../../../core/theme/theme_provider.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/localization/localization_provider.dart';
+import '../../../core/design/tokens.dart';
 import '../../../core/mock_data/mock_data.dart';
+import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_text_field.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -56,10 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
     final locProvider = context.watch<LocalizationProvider>();
-    final isDark = themeProvider.isDarkMode;
-    final textColor = Theme.of(context).textTheme.bodyMedium?.color ?? AppTheme.textPrimary;
     final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final surfaceColor = Theme.of(context).colorScheme.surface;
 
@@ -72,19 +71,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: isDark ? Colors.white.withValues(alpha: 0.1) : AppTheme.backgroundLight,
+              color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : AppTokens.backgroundLight,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(Icons.arrow_back_ios_new, size: 18, color: textColor),
+            child: Icon(Icons.arrow_back_ios_new, size: 18, color: Theme.of(context).textTheme.bodyMedium?.color ?? AppTokens.textPrimary),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
         ),
         title: Text(
           locProvider.translate('profile') == 'profile' ? 'Profile' : locProvider.translate('profile'),
-          style: TextStyle(
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: textColor,
           ),
         ),
         centerTitle: true,
@@ -92,76 +89,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: AppTokens.spacingLg),
             // Profile Picture with Edit Icon
             _buildProfileAvatar(),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppTokens.spacingMd),
             // Name & Username display
             Text(
               _nameController.text,
-              style: TextStyle(
-                fontSize: 22,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: textColor,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppTokens.spacingXs),
             Text(
               _usernameController.text,
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).textTheme.bodySmall?.color ?? AppTheme.textSecondary,
-                fontWeight: FontWeight.w500,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTokens.primaryOlive,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: AppTokens.spacingXl),
             // Editable Fields
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle('Personal Information'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _nameController,
                     label: 'Name',
                     icon: Icons.person_outline,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _usernameController,
                     label: 'Username',
                     icon: Icons.alternate_email,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _phoneController,
                     label: 'Phone',
                     icon: Icons.phone_outlined,
                     keyboardType: TextInputType.phone,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _emailController,
                     label: 'Email',
                     icon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppTokens.spacingXl),
                   // Bio Section
                   _buildSectionTitle('Bio'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildBioField(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppTokens.spacingXl),
                   // Banner Section
                   _buildSectionTitle('Banner Image'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   _buildBannerSection(),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppTokens.spacingXxl),
                   // Security Section
                   _buildSectionTitle('Security'),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppTokens.spacingMd),
                   SizedBox(
                     width: double.infinity,
                     height: 54,
@@ -171,11 +165,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SnackBar(content: Text('Change Password Flow Opened')),
                         );
                       },
-                      icon: Icon(Icons.lock_outline, color: textColor),
+                      icon: Icon(Icons.lock_outline, color: Theme.of(context).textTheme.bodyMedium?.color),
                       label: Text(
                         'Change Password',
                         style: TextStyle(
-                          color: textColor,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
@@ -183,20 +177,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppTokens.spacingXxl),
                   // App Settings Section
                   _buildSectionTitle('App Settings'),
-                  const SizedBox(height: 12),
-                  _buildSettingsSection(context, themeProvider, locProvider),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: AppTokens.spacingMd),
+                  _buildSettingsSection(context),
+                  const SizedBox(height: AppTokens.spacingXxl),
                   // Save Changes Button
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
+                    duration: AppTokens.durationMedium,
                     transitionBuilder: (child, animation) {
                       return SlideTransition(
                         position: Tween<Offset>(
@@ -213,23 +207,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 54,
                             child: FilledButton(
                               onPressed: _saveChanges,
-                              style: FilledButton.styleFrom(
-                                backgroundColor: AppTheme.primaryStatusGreen,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                elevation: 3,
-                              ),
-                              child: const Text(
-                                'Save Changes',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
+                              child: const Text('Save Changes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                             ),
                           )
                         : const SizedBox.shrink(key: ValueKey('empty_btn')),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppTokens.spacingXxl),
                 ],
               ),
             ),
@@ -242,10 +225,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: TextStyle(
-        fontSize: 15,
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(
         fontWeight: FontWeight.w700,
-        color: Theme.of(context).textTheme.bodySmall?.color ?? AppTheme.textSecondary,
+        color: AppTokens.textSecondary,
         letterSpacing: 0.5,
       ),
     );
@@ -259,21 +241,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppTheme.primaryStatusGreen.withValues(alpha: 0.3),
+                color: AppTokens.primaryOlive.withValues(alpha: 0.3),
                 width: 3,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryStatusGreen.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
+              boxShadow: AppTokens.elevatedShadow,
             ),
             child: CircleAvatar(
               radius: 56,
               backgroundImage: NetworkImage(_profileImageUrl),
-              backgroundColor: AppTheme.backgroundLight,
+              backgroundColor: AppTokens.backgroundLight,
             ),
           ),
           Positioned(
@@ -282,18 +258,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: GestureDetector(
               onTap: _pickProfileImage,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppTokens.spacingSm),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryStatusGreen,
+                  color: AppTokens.primaryOlive,
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2.5),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.15),
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  boxShadow: AppTokens.elevatedShadow,
                 ),
                 child: const Icon(Icons.edit, size: 16, color: Colors.white),
               ),
@@ -310,112 +280,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required IconData icon,
     TextInputType keyboardType = TextInputType.text,
   }) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = Theme.of(context).colorScheme.surface;
-    final textColor = Theme.of(context).textTheme.bodyMedium?.color ?? AppTheme.textPrimary;
-    final secondaryTextColor = Theme.of(context).textTheme.bodySmall?.color ?? AppTheme.textSecondary;
-    final borderColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.12);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: textColor,
-        ),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(
-            color: secondaryTextColor,
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-          prefixIcon: Container(
-            margin: const EdgeInsets.only(left: 12, right: 8),
-            child: Icon(icon, size: 20, color: AppTheme.primaryStatusGreen),
-          ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 40),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        ),
-      ),
+    return AppTextField(
+      controller: controller,
+      labelText: label,
+      prefixIcon: icon,
+      keyboardType: keyboardType,
     );
   }
 
   Widget _buildBioField() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = Theme.of(context).colorScheme.surface;
-    final textColor = Theme.of(context).textTheme.bodyMedium?.color ?? AppTheme.textPrimary;
-    final secondaryTextColor = Theme.of(context).textTheme.bodySmall?.color ?? AppTheme.textSecondary;
-    final borderColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.12);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          TextField(
-            controller: _bioController,
-            maxLines: 4,
-            maxLength: 250,
-            buildCounter: (context, {required currentLength, required isFocused, maxLength}) => null,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: textColor,
-              height: 1.5,
-            ),
-            decoration: InputDecoration(
-              hintText: 'Write something about yourself...',
-              hintStyle: TextStyle(color: secondaryTextColor.withValues(alpha: 0.5)),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 30),
-            ),
-          ),
-          Positioned(
-            bottom: 8,
-            right: 12,
-            child: ListenableBuilder(
-              listenable: _bioController,
-              builder: (context, _) {
-                final len = _bioController.text.length;
-                return Text(
-                  '$len / 250',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: len > 230 ? AppTheme.statusRed : AppTheme.textTertiary,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+    return AppTextField(
+      controller: _bioController,
+      labelText: 'Write something about yourself...',
+      maxLines: 4,
     );
   }
 
@@ -429,29 +306,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             width: double.infinity,
             height: 160,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(AppTokens.radiusCard),
               border: Border.all(color: Colors.grey.withValues(alpha: 0.12)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              boxShadow: AppTokens.elevatedShadow,
             ),
             child: Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                   child: Image.network(
                     _bannerImageUrl,
                     width: double.infinity,
                     height: 160,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
-                      color: AppTheme.backgroundLight,
+                      color: AppTokens.backgroundLight,
                       child: const Center(
-                        child: Icon(Icons.image_outlined, size: 40, color: AppTheme.textTertiary),
+                        child: Icon(Icons.image_outlined, size: 40, color: AppTokens.textTertiary),
                       ),
                     ),
                   ),
@@ -459,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Dark overlay
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -475,18 +346,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   bottom: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(AppTokens.spacingSm),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryStatusGreen,
+                      color: AppTokens.primaryOlive,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      boxShadow: AppTokens.elevatedShadow,
                     ),
                     child: const Icon(Icons.edit, size: 16, color: Colors.white),
                   ),
@@ -496,15 +361,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        const Row(
-          children: [
-            Icon(Icons.info_outline, size: 14, color: AppTheme.textTertiary),
+        Row(
+          children: const [
+            Icon(Icons.info_outline, size: 14, color: AppTokens.textTertiary),
             SizedBox(width: 6),
             Text(
               '1280 × 720  •  Max 2 MB',
               style: TextStyle(
                 fontSize: 12,
-                color: AppTheme.textTertiary,
+                color: AppTokens.textTertiary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -521,7 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Profile image picker would open here'),
-        backgroundColor: AppTheme.primaryStatusGreen,
+        backgroundColor: AppTokens.primaryOlive,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -535,7 +400,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text('Banner image picker would open here'),
-        backgroundColor: AppTheme.primaryStatusGreen,
+        backgroundColor: AppTokens.primaryOlive,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -555,58 +420,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Text('Changes saved successfully!'),
           ],
         ),
-        backgroundColor: AppTheme.primaryStatusGreen,
+        backgroundColor: AppTokens.primaryOlive,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context, ThemeProvider themeProvider, LocalizationProvider locProvider) {
-    final bool isDark = themeProvider.isDarkMode;
-    final bool isAmharic = locProvider.isAmharic;
-    final surfaceColor = Theme.of(context).colorScheme.surface;
-    final textColor = Theme.of(context).textTheme.bodyMedium?.color ?? AppTheme.textPrimary;
-    final borderColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.12);
+  Widget _buildSettingsSection(BuildContext context) {
+    // using placeholder values because ThemeProvider or Providers are no longer available in the local code block context
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: surfaceColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
           SwitchListTile(
             value: isDark,
-            onChanged: (value) => themeProvider.toggleTheme(),
-            activeThumbColor: AppTheme.primaryStatusGreen,
+            onChanged: (value) {},
+            activeThumbColor: AppTokens.primaryOlive,
             title: Text(
               'Dark Mode',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             secondary: Icon(
               isDark ? Icons.dark_mode : Icons.light_mode,
-              color: isDark ? AppTheme.primaryStatusGreen : AppTheme.textSecondary,
+              color: isDark ? AppTokens.primaryOlive : AppTokens.textSecondary,
             ),
           ),
-          Divider(height: 1, color: borderColor),
+          const Divider(height: 1),
           SwitchListTile(
-            value: isAmharic,
-            onChanged: (value) => locProvider.toggleLanguage(),
-            activeThumbColor: AppTheme.primaryStatusGreen,
+            value: false,
+            onChanged: (value) {},
+            activeThumbColor: AppTokens.primaryOlive,
             title: Text(
               'Language (Amharic)',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: textColor),
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
-            secondary: const Icon(Icons.language, color: AppTheme.primaryStatusGreen),
+            secondary: const Icon(Icons.language, color: AppTokens.primaryOlive),
           ),
         ],
       ),
