@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/mock_data/mock_data.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_empty_state.dart';
-import '../../../core/widgets/status_badge.dart';
 
 class CoursesScreen extends StatelessWidget {
   const CoursesScreen({super.key});
@@ -15,21 +13,15 @@ class CoursesScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0x00000000),
         body: Column(
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              margin: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: AppTokens.spacingXs),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.03),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+                boxShadow: AppTokens.elevatedShadow,
               ),
               child: const TabBar(
                 labelColor: AppTokens.primaryOlive,
@@ -58,7 +50,7 @@ class CoursesScreen extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Create Course Flow')));
           },
           backgroundColor: AppTokens.primaryOlive,
-          child: const Icon(Icons.add, color: Colors.white),
+          child: const Icon(Icons.add, color: AppTokens.backgroundLight),
         ),
       ),
     );
@@ -68,15 +60,10 @@ class CoursesScreen extends StatelessWidget {
     final filtered = MockData.courses.where((c) => c['status'] == filterStatus).toList();
 
     if (filtered.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.video_library, size: 60, color: AppTokens.textSecondary.withValues(alpha: 0.3)),
-            const SizedBox(height: AppTokens.spacingMd),
-            Text('No courses found', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppTokens.textSecondary)),
-          ],
-        ),
+      return const AppEmptyState(
+        title: 'No courses found',
+        subtitle: 'No courses match your criteria yet.',
+        icon: Icons.video_library,
       );
     }
 

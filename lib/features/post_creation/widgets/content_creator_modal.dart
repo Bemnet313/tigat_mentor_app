@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/design/motion.dart';
 import '../../../core/widgets/app_text_field.dart';
 
 class ContentCreatorModal {
@@ -7,7 +8,7 @@ class ContentCreatorModal {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (context) => const _CreatePostView(),
     );
   }
@@ -38,11 +39,13 @@ class _CreatePostViewState extends State<_CreatePostView> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? Theme.of(context).colorScheme.surface : AppTokens.backgroundLight;
     
     return Container(
-      decoration: const BoxDecoration(
-        color: AppTokens.backgroundLight,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(AppTokens.radiusCard),
           topRight: Radius.circular(AppTokens.radiusCard),
         ),
@@ -59,20 +62,20 @@ class _CreatePostViewState extends State<_CreatePostView> {
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: AppTokens.borderSubtle,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
           ),
           _buildHeader(context),
           const Divider(),
-          _buildDestinationToggle(),
+          _buildDestinationToggle(context),
           const SizedBox(height: AppTokens.spacingMd),
-          _buildContentTypePicker(),
+          _buildContentTypePicker(context),
           const SizedBox(height: AppTokens.spacingMd),
           Flexible(
             child: SingleChildScrollView(
-              child: _buildDynamicContentEditor(),
+              child: _buildDynamicContentEditor(context),
             ),
           ),
           const SizedBox(height: AppTokens.spacingMd),
@@ -80,7 +83,8 @@ class _CreatePostViewState extends State<_CreatePostView> {
           const SizedBox(height: AppTokens.spacingMd),
           SizedBox(
             width: double.infinity,
-            child: FilledButton(
+            child: AppTapBehavior(
+              child: FilledButton(
               onPressed: () {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -95,6 +99,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
                 ),
               ),
               child: const Text('Post', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
             ),
           ),
         ],
@@ -115,7 +120,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
     );
   }
 
-  Widget _buildDestinationToggle() {
+  Widget _buildDestinationToggle(BuildContext context) {
     return Row(
       children: [
         Text('Post to: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
@@ -124,6 +129,8 @@ class _CreatePostViewState extends State<_CreatePostView> {
           child: DropdownButton<String>(
             isExpanded: true,
             value: _selectedDestination,
+            dropdownColor: Theme.of(context).colorScheme.surface,
+            style: Theme.of(context).textTheme.bodyMedium,
             underline: const SizedBox(),
             onChanged: (String? newValue) {
               if (newValue != null) {
@@ -142,7 +149,11 @@ class _CreatePostViewState extends State<_CreatePostView> {
     );
   }
 
-  Widget _buildContentTypePicker() {
+  Widget _buildContentTypePicker(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? AppTokens.backgroundLight : AppTokens.textPrimary;
+    final surfaceColor = isDark ? AppTokens.overlayLight : AppTokens.surfaceElevated;
+
     return SizedBox(
       height: 40,
       child: ListView.builder(
@@ -156,9 +167,9 @@ class _CreatePostViewState extends State<_CreatePostView> {
             child: ChoiceChip(
               label: Row(
                 children: [
-                  Icon(type['icon'], size: 16, color: isSelected ? Colors.white : AppTokens.textPrimary),
+                  Icon(type['icon'], size: 16, color: isSelected ? AppTokens.backgroundLight : textColor),
                   const SizedBox(width: 4),
-                  Text(type['label'], style: TextStyle(color: isSelected ? Colors.white : AppTokens.textPrimary)),
+                  Text(type['label'], style: TextStyle(color: isSelected ? AppTokens.backgroundLight : textColor)),
                 ],
               ),
               selected: isSelected,
@@ -166,7 +177,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
                 setState(() => _selectedContentType = type['label']);
               },
               selectedColor: AppTokens.primaryOlive,
-              backgroundColor: AppTokens.surfaceElevated,
+              backgroundColor: surfaceColor,
             ),
           );
         },
@@ -189,7 +200,10 @@ class _CreatePostViewState extends State<_CreatePostView> {
     );
   }
 
-  Widget _buildDynamicContentEditor() {
+  Widget _buildDynamicContentEditor(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final surfaceColor = isDark ? AppTokens.overlayLight : AppTokens.surfaceElevated;
+
     switch (_selectedContentType) {
       case 'Image':
         return Column(
@@ -200,16 +214,16 @@ class _CreatePostViewState extends State<_CreatePostView> {
               height: 150,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppTokens.surfaceElevated,
+                color: surfaceColor,
                 border: Border.all(color: AppTokens.textSecondary.withValues(alpha: 0.3)),
                 borderRadius: BorderRadius.circular(AppTokens.radiusCard),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add_photo_alternate, size: 40, color: AppTokens.textSecondary),
-                  SizedBox(height: 8),
-                  Text('Tap to select an image (Max 1)'),
+                  const Icon(Icons.add_photo_alternate, size: 40, color: AppTokens.textSecondary),
+                  const SizedBox(height: 8),
+                  Text('Tap to select an image (Max 1)', style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
             ),
@@ -249,7 +263,7 @@ class _CreatePostViewState extends State<_CreatePostView> {
                   FloatingActionButton(
                     backgroundColor: AppTokens.statusRed,
                     onPressed: () {},
-                    child: const Icon(Icons.stop, color: Colors.white),
+                    child: const Icon(Icons.stop, color: AppTokens.backgroundLight),
                   ),
                   IconButton(icon: const Icon(Icons.play_arrow), onPressed: () {}),
                 ],
@@ -265,15 +279,15 @@ class _CreatePostViewState extends State<_CreatePostView> {
             Container(
               padding: const EdgeInsets.all(AppTokens.spacingMd),
               decoration: BoxDecoration(
-                color: AppTokens.surfaceElevated,
+                color: surfaceColor,
                 borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.video_library, color: AppTokens.textSecondary),
-                  SizedBox(width: AppTokens.spacingMd),
-                  Expanded(child: Text('Pick from Web-Uploaded Library')),
-                  Icon(Icons.chevron_right),
+                  const Icon(Icons.video_library, color: AppTokens.textSecondary),
+                  const SizedBox(width: AppTokens.spacingMd),
+                  Expanded(child: Text('Pick from Web-Uploaded Library', style: Theme.of(context).textTheme.bodyMedium)),
+                  const Icon(Icons.chevron_right),
                 ],
               ),
             ),

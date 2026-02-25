@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/design/motion.dart';
 import '../../../core/mock_data/mock_data.dart';
-import '../../../core/design/tokens.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../core/widgets/app_text_field.dart';
@@ -62,7 +62,9 @@ class _WalletScreenState extends State<WalletScreen> {
           colors: [
             AppTokens.primaryOliveDark,
             AppTokens.primaryOlive,
+            AppTokens.accentSoft,
           ],
+          stops: [0.0, 0.7, 1.0],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -76,7 +78,7 @@ class _WalletScreenState extends State<WalletScreen> {
         children: [
           const Text(
             'Withdrawable Balance',
-            style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(color: AppTokens.textTertiary, fontSize: 14, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: AppTokens.spacingSm),
           Row(
@@ -86,7 +88,7 @@ class _WalletScreenState extends State<WalletScreen> {
               Text(
                 '${MockData.currentMonthEarningsETB}',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
+                  color: AppTokens.backgroundLight,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.5,
                 ),
@@ -95,7 +97,7 @@ class _WalletScreenState extends State<WalletScreen> {
               Text(
                 'ETB',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.white,
+                  color: AppTokens.backgroundLight,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -104,32 +106,34 @@ class _WalletScreenState extends State<WalletScreen> {
           const SizedBox(height: AppTokens.spacingXl),
           ClipRRect(
             borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    width: 0.5,
+            child: RepaintBoundary(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 14.0, sigmaY: 14.0),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppTokens.overlayLight,
+                    borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+                    border: Border.all(
+                      color: AppTokens.borderSubtle,
+                      width: 0.5,
+                    ),
                   ),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      _showWithdrawModal(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Center(
-                        child: Text(
-                          'Request Withdrawal',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                  child: Material(
+                    color: const Color(0x00000000),
+                    child: InkWell(
+                      onTap: () {
+                        _showWithdrawModal(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: Text(
+                            'Request Withdrawal',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: AppTokens.backgroundLight,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -278,7 +282,8 @@ class _WalletScreenState extends State<WalletScreen> {
               const SizedBox(height: AppTokens.spacingXl),
               SizedBox(
                 width: double.infinity,
-                child: FilledButton(
+                child: AppTapBehavior(
+                  child: FilledButton(
                   onPressed: () {
                     Navigator.pop(ctx);
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -291,7 +296,8 @@ class _WalletScreenState extends State<WalletScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: AppTokens.spacingXl),
+            ),
+            const SizedBox(height: AppTokens.spacingXl),
             ],
           ),
         );

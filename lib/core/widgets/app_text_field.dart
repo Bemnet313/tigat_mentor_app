@@ -34,13 +34,13 @@ class AppTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withValues(alpha: 0.3) : AppTokens.textSecondary.withValues(alpha: 0.15),
+            color: isDark ? AppTokens.primaryOliveDark.withValues(alpha: 0.3) : AppTokens.textSecondary.withValues(alpha: 0.15),
             offset: const Offset(4, 4),
             blurRadius: 10,
             spreadRadius: 1,
           ),
           BoxShadow(
-            color: isDark ? Colors.white.withValues(alpha: 0.02) : Colors.white,
+            color: isDark ? AppTokens.overlayLight : AppTokens.backgroundLight,
             offset: const Offset(-4, -4),
             blurRadius: 10,
             spreadRadius: 1,
@@ -64,7 +64,7 @@ class AppTextField extends StatelessWidget {
             borderSide: BorderSide.none,
           ),
           filled: true,
-          fillColor: Colors.transparent,
+          fillColor: const Color(0x00000000),
           contentPadding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: AppTokens.spacingLg),
         ),
       ),

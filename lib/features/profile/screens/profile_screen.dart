@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/localization/localization_provider.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/design/motion.dart';
 import '../../../core/mock_data/mock_data.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text_field.dart';
+import '../../../core/theme/theme_provider.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -71,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.1) : AppTokens.backgroundLight,
+              color: Theme.of(context).brightness == Brightness.dark ? AppTokens.overlayLight : AppTokens.backgroundLight,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(Icons.arrow_back_ios_new, size: 18, color: Theme.of(context).textTheme.bodyMedium?.color ?? AppTokens.textPrimary),
@@ -79,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          locProvider.translate('profile') == 'profile' ? 'Profile' : locProvider.translate('profile'),
+          locProvider.translate('profile'),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -115,46 +118,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSectionTitle('Personal Information'),
+                  _buildSectionTitle(locProvider.translate('personal_information')),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _nameController,
-                    label: 'Name',
+                    label: locProvider.translate('name'),
                     icon: Icons.person_outline,
                   ),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _usernameController,
-                    label: 'Username',
+                    label: locProvider.translate('username'),
                     icon: Icons.alternate_email,
                   ),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _phoneController,
-                    label: 'Phone',
+                    label: locProvider.translate('phone'),
                     icon: Icons.phone_outlined,
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildEditableField(
                     controller: _emailController,
-                    label: 'Email',
+                    label: locProvider.translate('email'),
                     icon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: AppTokens.spacingXl),
                   // Bio Section
-                  _buildSectionTitle('Bio'),
+                  _buildSectionTitle(locProvider.translate('bio')),
                   const SizedBox(height: AppTokens.spacingMd),
-                  _buildBioField(),
+                  _buildBioField(locProvider),
                   const SizedBox(height: AppTokens.spacingXl),
                   // Banner Section
-                  _buildSectionTitle('Banner Image'),
+                  _buildSectionTitle(locProvider.translate('banner_image')),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildBannerSection(),
                   const SizedBox(height: AppTokens.spacingXxl),
                   // Security Section
-                  _buildSectionTitle('Security'),
+                  _buildSectionTitle(locProvider.translate('security')),
                   const SizedBox(height: AppTokens.spacingMd),
                   SizedBox(
                     width: double.infinity,
@@ -167,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       icon: Icon(Icons.lock_outline, color: Theme.of(context).textTheme.bodyMedium?.color),
                       label: Text(
-                        'Change Password',
+                        locProvider.translate('change_password'),
                         style: TextStyle(
                           color: Theme.of(context).textTheme.bodyMedium?.color,
                           fontSize: 15,
@@ -175,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                        side: const BorderSide(color: AppTokens.borderSubtle),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
                         ),
@@ -184,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: AppTokens.spacingXxl),
                   // App Settings Section
-                  _buildSectionTitle('App Settings'),
+                  _buildSectionTitle(locProvider.translate('app_settings')),
                   const SizedBox(height: AppTokens.spacingMd),
                   _buildSettingsSection(context),
                   const SizedBox(height: AppTokens.spacingXxl),
@@ -205,9 +208,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             key: const ValueKey('save_btn'),
                             width: double.infinity,
                             height: 54,
-                            child: FilledButton(
+                            child: AppTapBehavior(
+                              child: FilledButton(
                               onPressed: _saveChanges,
-                              child: const Text('Save Changes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              child: Text(locProvider.translate('save_changes'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              ),
                             ),
                           )
                         : const SizedBox.shrink(key: ValueKey('empty_btn')),
@@ -262,10 +267,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   color: AppTokens.primaryOlive,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2.5),
+                  border: Border.all(color: AppTokens.backgroundLight, width: 2.5),
                   boxShadow: AppTokens.elevatedShadow,
                 ),
-                child: const Icon(Icons.edit, size: 16, color: Colors.white),
+                child: const Icon(Icons.edit, size: 16, color: AppTokens.backgroundLight),
               ),
             ),
           ),
@@ -288,10 +293,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildBioField() {
+  Widget _buildBioField(LocalizationProvider locProvider) {
     return AppTextField(
       controller: _bioController,
-      labelText: 'Write something about yourself...',
+      labelText: locProvider.translate('write_something'),
       maxLines: 4,
     );
   }
@@ -307,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 160,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.12)),
+              border: Border.all(color: AppTokens.borderSubtle),
               boxShadow: AppTokens.elevatedShadow,
             ),
             child: Stack(
@@ -331,12 +336,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.3),
+                        Color(0x00000000), // transparent
+                        AppTokens.overlayDark,
                       ],
                     ),
                   ),
@@ -350,10 +355,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                       color: AppTokens.primaryOlive,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: AppTokens.backgroundLight, width: 2),
                       boxShadow: AppTokens.elevatedShadow,
                     ),
-                    child: const Icon(Icons.edit, size: 16, color: Colors.white),
+                    child: const Icon(Icons.edit, size: 16, color: AppTokens.backgroundLight),
                   ),
                 ),
               ],
@@ -361,8 +366,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        Row(
-          children: const [
+        const Row(
+          children: [
             Icon(Icons.info_outline, size: 14, color: AppTokens.textTertiary),
             SizedBox(width: 6),
             Text(
@@ -415,7 +420,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       SnackBar(
         content: const Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            Icon(Icons.check_circle, color: AppTokens.backgroundLight, size: 20),
             SizedBox(width: 10),
             Text('Changes saved successfully!'),
           ],
@@ -428,8 +433,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettingsSection(BuildContext context) {
-    // using placeholder values because ThemeProvider or Providers are no longer available in the local code block context
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeProvider = context.watch<ThemeProvider>();
+    final locProvider = context.watch<LocalizationProvider>();
+    final isDark = themeProvider.isDarkMode;
+    final isAmharic = locProvider.isAmharic;
 
     return AppCard(
       padding: EdgeInsets.zero,
@@ -437,10 +444,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           SwitchListTile(
             value: isDark,
-            onChanged: (value) {},
+            onChanged: (value) {
+              themeProvider.toggleTheme();
+            },
             activeThumbColor: AppTokens.primaryOlive,
             title: Text(
-              'Dark Mode',
+              locProvider.translate('dark_mode'),
               style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             secondary: Icon(
@@ -450,11 +459,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const Divider(height: 1),
           SwitchListTile(
-            value: false,
-            onChanged: (value) {},
+            value: isAmharic,
+            onChanged: (value) {
+              locProvider.toggleLanguage();
+            },
             activeThumbColor: AppTokens.primaryOlive,
             title: Text(
-              'Language (Amharic)',
+              locProvider.translate('language_amharic'),
               style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
             ),
             secondary: const Icon(Icons.language, color: AppTokens.primaryOlive),

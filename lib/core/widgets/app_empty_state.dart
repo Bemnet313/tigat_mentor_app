@@ -27,15 +27,26 @@ class AppEmptyState extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(AppTokens.spacingLg),
+              width: 120,
+              height: 120,
               decoration: BoxDecoration(
-                color: AppTokens.primaryOlive.withValues(alpha: 0.1),
+                color: Theme.of(context).scaffoldBackgroundColor,
                 shape: BoxShape.circle,
+                border: Border.all(color: AppTokens.borderSubtle, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTokens.borderSubtle.withValues(alpha: 0.5),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  )
+                ],
               ),
-              child: Icon(
-                icon,
-                size: 64,
-                color: AppTokens.primaryOlive,
+              child: Center(
+                child: Icon(
+                  icon,
+                  size: 48,
+                  color: AppTokens.textTertiary,
+                ),
               ),
             ),
             const SizedBox(height: AppTokens.spacingXl),

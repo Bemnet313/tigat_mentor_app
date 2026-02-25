@@ -44,7 +44,7 @@ class CommunityScreen extends StatelessWidget {
           _showUpgradeDialog(context);
         },
         backgroundColor: AppTokens.primaryOlive,
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppTokens.backgroundLight),
       ),
     );
   }

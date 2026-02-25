@@ -4,6 +4,8 @@ import '../../../core/mock_data/mock_data.dart';
 import '../../../core/widgets/app_card.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/status_badge.dart';
+import '../../../core/widgets/app_skeleton.dart';
+import '../../../core/widgets/app_empty_state.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
@@ -96,34 +98,23 @@ class _StudentsScreenState extends State<StudentsScreen> {
       padding: const EdgeInsets.all(AppTokens.spacingLg),
       itemCount: 5,
       itemBuilder: (context, index) {
-        return AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: 12),
+        return const AppCard(
+          padding: EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: 12),
           child: Row(
             children: [
-              Container(
+              AppSkeleton(
                 width: 44,
                 height: 44,
-                decoration: BoxDecoration(
-                  color: AppTokens.textSecondary.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
+                borderRadius: 22,
               ),
-              const SizedBox(width: AppTokens.spacingLg),
+              SizedBox(width: AppTokens.spacingLg),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 120,
-                      height: 14,
-                      color: AppTokens.textSecondary.withValues(alpha: 0.1),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 80,
-                      height: 12,
-                      color: AppTokens.textSecondary.withValues(alpha: 0.1),
-                    ),
+                    AppSkeleton(width: 120, height: 14),
+                    SizedBox(height: 8),
+                    AppSkeleton(width: 80, height: 12),
                   ],
                 ),
               ),
@@ -142,18 +133,10 @@ class _StudentsScreenState extends State<StudentsScreen> {
     }).toList();
 
     if (filteredList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.school, size: 64, color: AppTokens.textSecondary.withValues(alpha: 0.3)),
-            const SizedBox(height: AppTokens.spacingLg),
-            Text(
-              'No students found',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppTokens.textSecondary),
-            ),
-          ],
-        ),
+      return const AppEmptyState(
+        title: 'No students found',
+        subtitle: 'Try adjusting your search filters.',
+        icon: Icons.school,
       );
     }
 

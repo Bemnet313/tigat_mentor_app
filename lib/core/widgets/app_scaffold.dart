@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../constants/app_strings.dart';
+import 'package:provider/provider.dart';
 import '../design/tokens.dart';
 import '../mock_data/mock_data.dart';
+import '../localization/localization_provider.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget child;
@@ -16,12 +17,29 @@ class AppScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: _buildAppBar(context, location, isDashboard),
-      body: child,
+      body: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          gradient: RadialGradient(
+            center: const Alignment(0.5, -0.2), // slightly top-right
+            radius: 1.5,
+            colors: [
+              Theme.of(context).brightness == Brightness.dark 
+                  ? AppTokens.primaryOliveDark.withValues(alpha: 0.3) 
+                  : AppTokens.accentSoft.withValues(alpha: 0.15),
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+            stops: const [0.0, 1.0],
+          ),
+        ),
+        child: child,
+      ),
       bottomNavigationBar: _buildBottomNav(context, location),
     );
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context, String location, bool isDashboard) {
+    final loc = context.watch<LocalizationProvider>();
 
     return AppBar(
       leadingWidth: 130,
@@ -45,15 +63,15 @@ class AppScaffold extends StatelessWidget {
                 Icon(
                   Icons.dashboard_rounded,
                   size: 14,
-                  color: isDashboard ? Colors.white : AppTokens.primaryOlive,
+                  color: isDashboard ? AppTokens.backgroundLight : AppTokens.primaryOlive,
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  AppStrings.navDashboard,
+                  loc.translate('dashboard_nav'),
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: isDashboard ? Colors.white : AppTokens.primaryOlive,
+                    color: isDashboard ? AppTokens.backgroundLight : AppTokens.primaryOlive,
                   ),
                 ),
               ],
@@ -93,30 +111,37 @@ class AppScaffold extends StatelessWidget {
   }
 
   Widget _buildLogo(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.dark 
-            ? AppTokens.surfaceElevated 
+        color: isDark 
+            ? AppTokens.primaryOliveDark 
             : AppTokens.backgroundLight,
         borderRadius: BorderRadius.circular(AppTokens.radiusPill),
         border: Border.all(
-          color: AppTokens.primaryOlive.withValues(alpha: 0.1),
+          color: AppTokens.primaryOlive.withValues(alpha: isDark ? 0.4 : 0.1),
         ),
       ),
       child: Image.asset(
         'assets/images/tigat_logo.png',
         height: 20,
         fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) => const Text(
+        color: isDark ? AppTokens.backgroundLight : AppTokens.primaryOlive,
+        errorBuilder: (context, error, stackTrace) => Text(
           'TIGU',
-          style: TextStyle(fontWeight: FontWeight.bold, color: AppTokens.primaryOlive),
+          style: TextStyle(
+            fontWeight: FontWeight.bold, 
+            color: isDark ? AppTokens.backgroundLight : AppTokens.primaryOlive,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildBottomNav(BuildContext context, String location) {
+    final loc = context.watch<LocalizationProvider>();
     int getIndex() {
       if (location.startsWith('/community')) return 0;
       if (location.startsWith('/students')) return 1;
@@ -143,10 +168,10 @@ class AppScaffold extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(context, 0, currentIndex, Icons.people_outline, Icons.people, AppStrings.navCommunity, '/community'),
-              _buildNavItem(context, 1, currentIndex, Icons.school_outlined, Icons.school, AppStrings.navStudents, '/students'),
-              _buildNavItem(context, 2, currentIndex, Icons.monetization_on_outlined, Icons.monetization_on, AppStrings.navWithdraw, '/wallet'),
-              _buildNavItem(context, 3, currentIndex, Icons.play_lesson_outlined, Icons.play_lesson, AppStrings.navMyCourses, '/courses'),
+              _buildNavItem(context, 0, currentIndex, Icons.people_outline, Icons.people, loc.translate('community'), '/community'),
+              _buildNavItem(context, 1, currentIndex, Icons.school_outlined, Icons.school, loc.translate('students'), '/students'),
+              _buildNavItem(context, 2, currentIndex, Icons.monetization_on_outlined, Icons.monetization_on, loc.translate('withdraw'), '/wallet'),
+              _buildNavItem(context, 3, currentIndex, Icons.play_lesson_outlined, Icons.play_lesson, loc.translate('my_courses'), '/courses'),
             ],
           ),
         ),
@@ -173,7 +198,7 @@ class AppScaffold extends StatelessWidget {
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: isSelected ? glowColor.withValues(alpha: 0.15) : Colors.transparent,
+                color: isSelected ? glowColor.withValues(alpha: 0.15) : const Color(0x00000000),
               ),
               child: Icon(isSelected ? activeIcon : icon, color: isSelected ? glowColor : color, size: 24),
             ),

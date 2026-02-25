@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/localization/localization_provider.dart';
 import '../../../core/design/tokens.dart';
+import '../../../core/design/motion.dart';
 import '../../../core/widgets/app_card.dart';
-import '../../../core/constants/app_strings.dart';
 import '../../../core/mock_data/mock_data.dart';
 import '../../post_creation/widgets/content_creator_modal.dart';
 
@@ -86,7 +86,9 @@ class DashboardScreen extends StatelessWidget {
           colors: [
             AppTokens.primaryOliveDark, 
             AppTokens.primaryOlive,
+            AppTokens.accentSoft,
           ],
+          stops: [0.0, 0.7, 1.0],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -102,27 +104,27 @@ class DashboardScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  AppStrings.dashboardRevenueOverview, 
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)
+                  loc.translate('revenue_overview'), 
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTokens.backgroundLight, fontWeight: FontWeight.bold)
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: AppTokens.overlayLight,
                     borderRadius: BorderRadius.circular(AppTokens.radiusPill),
                   ),
                   child: DropdownButton<String>(
                     value: 'Jan',
                     dropdownColor: AppTokens.primaryOliveDark,
                     isDense: true,
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: Colors.white),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTokens.backgroundLight),
                     underline: const SizedBox(),
                     onChanged: (String? newValue) {},
                     items: <String>['Jan', 'Feb', 'Mar']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        child: Text(value, style: const TextStyle(color: AppTokens.backgroundLight, fontWeight: FontWeight.bold)),
                       );
                     }).toList(),
                   ),
@@ -138,7 +140,7 @@ class DashboardScreen extends StatelessWidget {
                   '${MockData.currentMonthEarningsETB}',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w700, 
-                    color: Colors.white,
+                    color: AppTokens.backgroundLight,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -147,7 +149,7 @@ class DashboardScreen extends StatelessWidget {
                   'ETB',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700, 
-                    color: Colors.white,
+                    color: AppTokens.backgroundLight,
                   ),
                 ),
               ],
@@ -162,8 +164,8 @@ class DashboardScreen extends StatelessWidget {
                     drawVerticalLine: false,
                     drawHorizontalLine: true,
                     getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Colors.white.withValues(alpha: 0.1),
+                      return const FlLine(
+                        color: AppTokens.overlayLight,
                         strokeWidth: 1,
                       );
                     },
@@ -174,7 +176,7 @@ class DashboardScreen extends StatelessWidget {
                         showTitles: true,
                         reservedSize: 22,
                         getTitlesWidget: (value, meta) {
-                          const style = TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 12);
+                          const style = TextStyle(color: AppTokens.textTertiary, fontWeight: FontWeight.w600, fontSize: 12);
                           Widget text;
                           switch (value.toInt()) {
                             case 1: text = const Text('W1', style: style); break;
@@ -234,21 +236,23 @@ class DashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Post something Today !',
+          loc.translate('post_something_today'),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppTokens.spacingLg),
         SizedBox(
           width: double.infinity,
           height: 60,
-          child: FilledButton.icon(
-            onPressed: () {
+          child: AppTapBehavior(
+            child: FilledButton.icon(
+              onPressed: () {
               ContentCreatorModal.show(context);
             },
             icon: const Icon(Icons.add, size: 24),
             label: Text(
               loc.translate('new_post'),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             ),
           ),
         ),

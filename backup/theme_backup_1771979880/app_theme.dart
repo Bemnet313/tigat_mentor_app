@@ -54,7 +54,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusPill),
           ),
@@ -65,7 +65,7 @@ class AppTheme {
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusPill),
           ),
@@ -181,23 +181,23 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusPill),
           ),
           elevation: 2,
-          shadowColor: AppTokens.overlayDark,
+          shadowColor: Colors.black.withValues(alpha: 0.3),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTokens.radiusPill),
           ),
           elevation: 2,
-          shadowColor: AppTokens.overlayDark,
+          shadowColor: Colors.black.withValues(alpha: 0.3),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -209,11 +209,11 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          borderSide: const BorderSide(color: AppTokens.overlayLight),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          borderSide: const BorderSide(color: AppTokens.overlayLight),
+          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
@@ -243,7 +243,7 @@ class AppTheme {
           return const IconThemeData(color: darkTextSecondary, size: 24);
         }),
       ),
-      dividerColor: AppTokens.overlayLight,
+      dividerColor: Colors.white.withValues(alpha: 0.05),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {
           TargetPlatform.android: FadeSlidePageTransitionsBuilder(),

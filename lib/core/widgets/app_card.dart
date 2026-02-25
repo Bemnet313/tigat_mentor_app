@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/design/tokens.dart';
-import 'interactive_scale.dart';
+import '../design/tokens.dart';
+import '../design/motion.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;
@@ -29,7 +29,18 @@ class AppCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-          boxShadow: isDark ? [] : AppTokens.elevatedShadow,
+          boxShadow: isDark 
+              ? [
+                  const BoxShadow(
+                    color: AppTokens.overlayDark,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  )
+                ] 
+              : AppTokens.elevatedShadow,
+          border: isDark 
+              ? Border.all(color: AppTokens.primaryOlive.withValues(alpha: 0.2), width: 1.2) 
+              : Border.all(color: const Color(0x00000000), width: 0),
         ),
         child: Padding(
           padding: padding ?? const EdgeInsets.all(AppTokens.spacingLg),
@@ -38,18 +49,28 @@ class AppCard extends StatelessWidget {
       );
     }
 
-    return InteractiveScale(
+    return AppTapBehavior(
       onTap: onTap,
-      scaleDownTo: 0.98,
       child: Container(
         margin: margin ?? const EdgeInsets.only(bottom: AppTokens.spacingLg),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
-          boxShadow: isDark ? [] : AppTokens.elevatedShadow,
+          boxShadow: isDark 
+              ? [
+                  const BoxShadow(
+                    color: AppTokens.overlayDark,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  )
+                ] 
+              : AppTokens.elevatedShadow,
+          border: isDark 
+              ? Border.all(color: AppTokens.primaryOlive.withValues(alpha: 0.2), width: 1.2) 
+              : Border.all(color: const Color(0x00000000), width: 0),
         ),
         child: Material(
-          color: Colors.transparent,
+          color: const Color(0x00000000),
           child: Padding(
             padding: padding ?? const EdgeInsets.all(AppTokens.spacingLg),
             child: child,
