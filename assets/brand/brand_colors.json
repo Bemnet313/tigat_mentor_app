@@ -1,0 +1,17 @@
+{
+  "brandName": "TIGU Mentor",
+  "palette": {
+    "primaryOlive": { "hex": "#4A5A23", "usage": "Core brand color, primary actions" },
+    "primaryOliveDark": { "hex": "#1F2A14", "usage": "High-contrast backgrounds, hero sections" },
+    "accentGlow": { "hex": "#B7D77A", "usage": "Highlights, glowing effects" },
+    "accentSoft": { "hex": "#E3F2C6", "usage": "Warm gradient blends, soft highlight backgrounds" },
+    "backgroundLight": { "hex": "#FFFFFF", "usage": "Main Light mode canvas" },
+    "surfaceElevated": { "hex": "#F6F8F3", "usage": "Cards, text fields in Light mode" }
+  },
+  "motion": {
+    "short": "120ms",
+    "medium": "220ms",
+    "long": "360ms",
+    "curve": "easeInOut"
+  }
+}

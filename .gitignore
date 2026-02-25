@@ -44,7 +44,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Build logs & backups
+*.log
+backup/
+
 # Sensitive credentials & API Keys
+*.apk
 .env
 *.env
 android/app/google-services.json

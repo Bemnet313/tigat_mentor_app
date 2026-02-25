@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/localization/localization_provider.dart';
-import '../../../core/theme/theme.dart';
+import '../../../core/design/tokens.dart';
+import '../../../core/design/motion.dart';
+import '../../../core/widgets/app_card.dart';
 import '../../../core/mock_data/mock_data.dart';
 import '../../post_creation/widgets/content_creator_modal.dart';
 
@@ -14,14 +16,14 @@ class DashboardScreen extends StatelessWidget {
     final loc = context.watch<LocalizationProvider>();
     
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppTheme.spacingMd),
+      padding: const EdgeInsets.all(AppTokens.spacingLg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildRevenueGraph(context, loc),
-          const SizedBox(height: AppTheme.spacingLg),
+          const SizedBox(height: AppTokens.spacingXl),
           _buildKPIGrid(context, loc),
-          const SizedBox(height: AppTheme.spacingLg),
+          const SizedBox(height: AppTokens.spacingXl),
           _buildQuickActionsRow(context, loc),
         ],
       ),
@@ -31,54 +33,48 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildKPIGrid(BuildContext context, LocalizationProvider loc) {
     return GridView.count(
       crossAxisCount: 2,
-      crossAxisSpacing: AppTheme.spacingMd,
-      mainAxisSpacing: AppTheme.spacingMd,
+      crossAxisSpacing: AppTokens.spacingLg,
+      mainAxisSpacing: AppTokens.spacingLg,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      childAspectRatio: 1.5,
+      childAspectRatio: 1.4,
       children: [
-        _buildKPICard(context, loc.translate('earnings'), '${MockData.currentMonthEarningsETB} ETB', Icons.account_balance_wallet, AppTheme.primaryStatusGreen),
-        _buildKPICard(context, loc.translate('active_students'), '${MockData.activeStudents}', Icons.school, Colors.blue),
-        _buildKPICard(context, loc.translate('new_followers'), '+${MockData.newFollowersMonthly}', Icons.favorite, Colors.pink),
-        _buildKPICard(context, loc.translate('pending_withdrawals'), '${MockData.pendingWithdrawalsETB} ETB', Icons.pending_actions, AppTheme.statusWarning),
+        _buildKPICard(context, loc.translate('earnings'), '${MockData.currentMonthEarningsETB} ETB', Icons.account_balance_wallet, AppTokens.primaryOlive),
+        _buildKPICard(context, loc.translate('active_students'), '${MockData.activeStudents}', Icons.school, AppTokens.accentGlow),
+        _buildKPICard(context, loc.translate('new_followers'), '+${MockData.newFollowersMonthly}', Icons.favorite, AppTokens.statusWarning),
+        _buildKPICard(context, loc.translate('pending_withdrawals'), '${MockData.pendingWithdrawalsETB} ETB', Icons.pending_actions, AppTokens.statusRed),
       ],
     );
   }
 
   Widget _buildKPICard(BuildContext context, String title, String value, IconData icon, Color color) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppTheme.layeredShadow,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppTheme.spacingMd),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 20, color: color),
-                const SizedBox(width: AppTheme.spacingSm),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.spacingMd),
+      margin: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 20, color: color),
+              const SizedBox(width: AppTokens.spacingSm),
+              Expanded(
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+          ),
+        ],
       ),
     );
   }
@@ -86,64 +82,79 @@ class DashboardScreen extends StatelessWidget {
   Widget _buildRevenueGraph(BuildContext context, LocalizationProvider loc) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppTheme.layeredShadow,
+        gradient: const LinearGradient(
+          colors: [
+            AppTokens.primaryOliveDark, 
+            AppTokens.primaryOlive,
+            AppTokens.accentSoft,
+          ],
+          stops: [0.0, 0.7, 1.0],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppTokens.radiusLarge),
+        boxShadow: AppTokens.glowingShadow,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(AppTheme.spacingMd),
+        padding: const EdgeInsets.all(AppTokens.spacingLg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Revenue Overview', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  loc.translate('revenue_overview'), 
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppTokens.backgroundLight, fontWeight: FontWeight.bold)
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundLight,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppTheme.borderLight),
+                    color: AppTokens.overlayLight,
+                    borderRadius: BorderRadius.circular(AppTokens.radiusPill),
                   ),
                   child: DropdownButton<String>(
                     value: 'Jan',
+                    dropdownColor: AppTokens.primaryOliveDark,
                     isDense: true,
-                    icon: const Icon(Icons.keyboard_arrow_down, size: 16),
+                    icon: const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTokens.backgroundLight),
                     underline: const SizedBox(),
                     onChanged: (String? newValue) {},
                     items: <String>['Jan', 'Feb', 'Mar']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textPrimary, fontWeight: FontWeight.bold)),
+                        child: Text(value, style: const TextStyle(color: AppTokens.backgroundLight, fontWeight: FontWeight.bold)),
                       );
                     }).toList(),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: AppTheme.spacingMd),
+            const SizedBox(height: AppTokens.spacingLg),
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  '\$4,200',
+                  '${MockData.currentMonthEarningsETB}',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w700, 
-                    color: AppTheme.textPrimary, 
-                    fontSize: 32,
+                    color: AppTokens.backgroundLight,
+                    letterSpacing: -0.5,
                   ),
                 ),
-                const SizedBox(width: AppTheme.spacingSm),
+                const SizedBox(width: AppTokens.spacingXs),
                 Text(
-                  'total revenue',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.electricEmerald, fontWeight: FontWeight.w600),
+                  'ETB',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700, 
+                    color: AppTokens.backgroundLight,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: AppTheme.spacingLg),
+            const SizedBox(height: AppTokens.spacingXl),
             SizedBox(
               height: 200,
               child: LineChart(
@@ -154,7 +165,7 @@ class DashboardScreen extends StatelessWidget {
                     drawHorizontalLine: true,
                     getDrawingHorizontalLine: (value) {
                       return const FlLine(
-                        color: AppTheme.surfaceLight,
+                        color: AppTokens.overlayLight,
                         strokeWidth: 1,
                       );
                     },
@@ -165,29 +176,16 @@ class DashboardScreen extends StatelessWidget {
                         showTitles: true,
                         reservedSize: 22,
                         getTitlesWidget: (value, meta) {
-                          const style = TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 12);
+                          const style = TextStyle(color: AppTokens.textTertiary, fontWeight: FontWeight.w600, fontSize: 12);
                           Widget text;
                           switch (value.toInt()) {
-                            case 1:
-                              text = const Text('W1', style: style);
-                              break;
-                            case 3:
-                              text = const Text('W2', style: style);
-                              break;
-                            case 5:
-                              text = const Text('W3', style: style);
-                              break;
-                            case 7:
-                               text = const Text('W4', style: style);
-                               break;
-                            default:
-                              text = const Text('', style: style);
-                              break;
+                            case 1: text = const Text('W1', style: style); break;
+                            case 3: text = const Text('W2', style: style); break;
+                            case 5: text = const Text('W3', style: style); break;
+                            case 7: text = const Text('W4', style: style); break;
+                            default: text = const Text('', style: style); break;
                           }
-                          return SideTitleWidget(
-                            axisSide: meta.axisSide,
-                            child: text,
-                          );
+                          return SideTitleWidget(axisSide: meta.axisSide, child: text);
                         },
                       ),
                     ),
@@ -207,7 +205,7 @@ class DashboardScreen extends StatelessWidget {
                         FlSpot(7, 3000),
                       ],
                       isCurved: true,
-                      color: AppTheme.electricEmerald, // Electric Emerald
+                      color: AppTokens.accentGlow,
                       barWidth: 3,
                       isStrokeCapRound: true,
                       dotData: const FlDotData(show: false),
@@ -215,8 +213,8 @@ class DashboardScreen extends StatelessWidget {
                         show: true,
                         gradient: LinearGradient(
                           colors: [
-                            AppTheme.electricEmerald.withValues(alpha: 0.15),
-                            AppTheme.electricEmerald.withValues(alpha: 0.0),
+                            AppTokens.accentGlow.withValues(alpha: 0.3),
+                            AppTokens.accentGlow.withValues(alpha: 0.0),
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -238,29 +236,23 @@ class DashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Post something Today !',
+          loc.translate('post_something_today'),
           style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: AppTheme.spacingMd),
+        const SizedBox(height: AppTokens.spacingLg),
         SizedBox(
           width: double.infinity,
           height: 60,
-          child: FilledButton.icon(
-            onPressed: () {
+          child: AppTapBehavior(
+            child: FilledButton.icon(
+              onPressed: () {
               ContentCreatorModal.show(context);
             },
             icon: const Icon(Icons.add, size: 24),
             label: Text(
               loc.translate('new_post'),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            style: FilledButton.styleFrom(
-              backgroundColor: AppTheme.primaryStatusGreen,
-              foregroundColor: AppTheme.surfaceWhite,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              elevation: 2,
             ),
           ),
         ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/localization/localization_provider.dart';
-import '../../../core/theme/theme.dart';
+import '../../../core/design/tokens.dart';
+import '../../../core/widgets/app_card.dart';
+import '../widgets/create_room_modal.dart';
 
 class CommunityScreen extends StatelessWidget {
   const CommunityScreen({super.key});
@@ -13,65 +16,58 @@ class CommunityScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppTheme.spacingMd),
+        padding: const EdgeInsets.all(AppTokens.spacingMd),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildCustomThreadsCounter(context),
-            const SizedBox(height: AppTheme.spacingLg),
+            const SizedBox(height: AppTokens.spacingLg),
             Text(
               'Default Rooms',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: AppTheme.spacingSm),
-            _buildRoomCard(context, loc.translate('general'), Icons.public, 1250),
-            _buildRoomCard(context, loc.translate('ask_mentor'), Icons.question_answer, 420),
-            _buildRoomCard(context, loc.translate('announcements'), Icons.campaign, 850),
-            const SizedBox(height: AppTheme.spacingLg),
+            const SizedBox(height: AppTokens.spacingSm),
+            _buildRoomCard(context, loc.translate('general'), Icons.public, 1250, id: 'general'),
+            _buildRoomCard(context, 'Ask Senai', Icons.question_answer, 420, id: 'ask_senai'),
+            const SizedBox(height: AppTokens.spacingLg),
             Text(
-              'Custom Paid Rooms',
+              'Custom Rooms',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: AppTheme.spacingSm),
-            _buildRoomCard(context, 'Premium Signals', Icons.lock, 125, isPremium: true),
-            _buildRoomCard(context, '1-on-1 Coaching Logs', Icons.lock, 12, isPremium: true),
+            const SizedBox(height: AppTokens.spacingSm),
+            _buildRoomCard(context, 'Quizzes', Icons.quiz, 125, id: 'quizzes'),
+            _buildRoomCard(context, 'Weekly Prep', Icons.calendar_today, 12, id: 'weekly'),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showUpgradeDialog(context);
+          _showCreateRoomModal(context);
         },
-        backgroundColor: AppTheme.primaryStatusGreen,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: AppTokens.primaryOlive,
+        child: const Icon(Icons.add, color: AppTokens.backgroundLight),
       ),
     );
   }
 
   Widget _buildCustomThreadsCounter(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(AppTheme.spacingLg),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppTheme.layeredShadow,
-        border: Border.all(color: AppTheme.primaryStatusGreen.withValues(alpha: 0.2)),
-      ),
+    return AppCard(
+      padding: const EdgeInsets.all(AppTokens.spacingLg),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              const Icon(Icons.forum, color: AppTheme.primaryStatusGreen),
-              const SizedBox(width: AppTheme.spacingSm),
-              Text('Custom Threads Used', style: Theme.of(context).textTheme.bodyMedium),
+              const Icon(Icons.forum, color: AppTokens.primaryOlive),
+              const SizedBox(width: AppTokens.spacingSm),
+              Text('Custom Rooms Used', style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
           Text(
-            '3/5',
+            '2/5',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryStatusGreen,
+                  color: AppTokens.primaryOlive,
                 ),
           ),
         ],
@@ -79,41 +75,36 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRoomCard(BuildContext context, String title, IconData icon, int members, {bool isPremium = false}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppTheme.spacingMd),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppTheme.layeredShadow,
-      ),
-      child: Material(
-        color: Colors.transparent,
+  Widget _buildRoomCard(BuildContext context, String title, IconData icon, int members, {required String id, bool isPremium = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppTokens.spacingMd),
+      child: AppCard(
+        padding: EdgeInsets.zero,
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppTokens.radiusCard),
           onTap: () {
-            // Navigate to specific thread view inside the room
+            context.push('/community/$id');
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd, vertical: AppTheme.spacingSm),
+            padding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingMd, vertical: AppTokens.spacingSm),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isPremium ? AppTheme.statusWarning.withValues(alpha: 0.1) : AppTheme.primaryStatusGreen.withValues(alpha: 0.1),
+                    color: isPremium ? AppTokens.statusWarning.withValues(alpha: 0.1) : AppTokens.primaryOlive.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(icon, color: isPremium ? AppTheme.statusWarning : AppTheme.primaryStatusGreen, size: 24),
+                  child: Icon(icon, color: isPremium ? AppTokens.statusWarning : AppTokens.primaryOlive, size: 24),
                 ),
-                const SizedBox(width: AppTheme.spacingMd),
+                const SizedBox(width: AppTokens.spacingMd),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text('$members Members', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textSecondary)),
+                      Text('$members Members', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTokens.textSecondary)),
                     ],
                   ),
                 ),
@@ -121,17 +112,17 @@ class CommunityScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppTheme.statusWarning.withValues(alpha: 0.1),
+                      color: AppTokens.statusWarning.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     child: const Text(
                       'Premium',
-                      style: TextStyle(color: AppTheme.statusWarning, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: AppTokens.statusWarning, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(width: 8),
                 ],
-                const Icon(Icons.chevron_right, color: AppTheme.textTertiary),
+                const Icon(Icons.chevron_right, color: AppTokens.textTertiary),
               ],
             ),
           ),
@@ -140,26 +131,12 @@ class CommunityScreen extends StatelessWidget {
     );
   }
 
-  void _showUpgradeDialog(BuildContext context) {
-    showDialog(
+  void _showCreateRoomModal(BuildContext context) {
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext ctx) {
-        return AlertDialog(
-          title: const Text('Upgrade Required'),
-          content: const Text('You have used 3/5 custom threads. Upgrade to Mentor Premium (Coming Soon) to unlock unlimited threads.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: const Text('Close', style: TextStyle(color: AppTheme.textSecondary)),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(ctx),
-              style: ElevatedButton.styleFrom(backgroundColor: AppTheme.statusWarning),
-              child: const Text('Upgrade'),
-            ),
-          ],
-        );
-      },
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const CreateRoomModal(),
     );
   }
 }

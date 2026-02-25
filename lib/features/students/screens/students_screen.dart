@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/theme.dart';
+import '../../../core/design/tokens.dart';
 import '../../../core/mock_data/mock_data.dart';
+import '../../../core/widgets/app_card.dart';
+import '../../../core/widgets/app_text_field.dart';
+import '../../../core/widgets/status_badge.dart';
+import '../../../core/widgets/app_skeleton.dart';
+import '../../../core/widgets/app_empty_state.dart';
 
 class StudentsScreen extends StatefulWidget {
   const StudentsScreen({super.key});
@@ -12,8 +17,17 @@ class StudentsScreen extends StatefulWidget {
 class _StudentsScreenState extends State<StudentsScreen> {
   String _searchQuery = '';
   String _selectedFilter = 'All';
+  bool _isLoading = true;
 
   final List<String> _filters = ['All', 'Paid Students', 'Course Buyers'];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) setState(() => _isLoading = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +37,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
         _buildFilterChips(context),
         const Divider(),
         Expanded(
-          child: _buildStudentsList(context),
+          child: _isLoading ? _buildSkeletonList() : _buildStudentsList(context),
         ),
       ],
     );
@@ -31,18 +45,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
 
   Widget _buildSearchBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(AppTheme.spacingMd),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search by name or phone...',
-          prefixIcon: const Icon(Icons.search),
-          filled: true,
-          fillColor: AppTheme.backgroundLight,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(AppTheme.radiusInput),
-            borderSide: BorderSide.none,
-          ),
-        ),
+      padding: const EdgeInsets.all(AppTokens.spacingLg),
+      child: AppTextField(
+        controller: TextEditingController(text: _searchQuery),
+        labelText: '',
+        hintText: 'Search by name or phone...',
+        prefixIcon: Icons.search,
         onChanged: (value) {
           setState(() {
             _searchQuery = value.toLowerCase();
@@ -55,12 +63,12 @@ class _StudentsScreenState extends State<StudentsScreen> {
   Widget _buildFilterChips(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd),
+      padding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg),
       child: Row(
         children: _filters.map((filter) {
           final isSelected = _selectedFilter == filter;
           return Padding(
-            padding: const EdgeInsets.only(right: AppTheme.spacingSm),
+            padding: const EdgeInsets.only(right: AppTokens.spacingSm),
             child: FilterChip(
               label: Text(filter),
               selected: isSelected,
@@ -69,12 +77,51 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   _selectedFilter = filter;
                 });
               },
-              selectedColor: AppTheme.primaryStatusGreen.withValues(alpha: 0.2),
-              checkmarkColor: AppTheme.primaryStatusGreen,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              selectedColor: AppTokens.primaryOlive.withValues(alpha: 0.2),
+              checkmarkColor: AppTokens.primaryOlive,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
+              ),
+              side: BorderSide(
+                color: isSelected ? AppTokens.primaryOlive : AppTokens.textSecondary.withValues(alpha: 0.2),
+              ),
             ),
           );
         }).toList(),
       ),
+    );
+  }
+
+  Widget _buildSkeletonList() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(AppTokens.spacingLg),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return const AppCard(
+          padding: EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: 12),
+          child: Row(
+            children: [
+              AppSkeleton(
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+              ),
+              SizedBox(width: AppTokens.spacingLg),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppSkeleton(width: 120, height: 14),
+                    SizedBox(height: 8),
+                    AppSkeleton(width: 80, height: 12),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -86,32 +133,29 @@ class _StudentsScreenState extends State<StudentsScreen> {
     }).toList();
 
     if (filteredList.isEmpty) {
-      return Center(
-         child: Text('No students found', style: Theme.of(context).textTheme.bodyMedium),
+      return const AppEmptyState(
+        title: 'No students found',
+        subtitle: 'Try adjusting your search filters.',
+        icon: Icons.school,
       );
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(AppTheme.spacingMd),
+      padding: const EdgeInsets.all(AppTokens.spacingLg),
       itemCount: filteredList.length,
       itemBuilder: (context, index) {
         final st = filteredList[index];
         final bool isActive = st['status'] == 'Active';
-        final Color statusColor = isActive ? AppTheme.primaryStatusGreen : AppTheme.textTertiary;
+        final BadgeType type = isActive ? BadgeType.positive : BadgeType.neutral;
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: AppTheme.spacingMd),
-          decoration: BoxDecoration(
-            color: AppTheme.surfaceWhite,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: AppTheme.layeredShadow,
-          ),
+        return AppCard(
+          padding: EdgeInsets.zero,
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: AppTheme.spacingMd, vertical: 8),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppTokens.spacingLg, vertical: 8),
             leading: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: AppTheme.primaryStatusGreen.withValues(alpha: 0.3), width: 2),
+                border: Border.all(color: AppTokens.primaryOlive.withValues(alpha: 0.3), width: 2),
               ),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(st['avatar']),
@@ -121,30 +165,17 @@ class _StudentsScreenState extends State<StudentsScreen> {
             title: Text(st['name'], style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
             subtitle: Padding(
               padding: const EdgeInsets.only(top: 4.0),
-              child: Text(st['course'], style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+              child: Text(st['course'], style: const TextStyle(color: AppTokens.textSecondary, fontSize: 13)),
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Text(
-                    st['status'],
-                    style: TextStyle(
-                      color: statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
+                StatusBadge(label: st['status'], type: type),
+                const SizedBox(width: AppTokens.spacingSm),
                 PopupMenuButton<String>(
+                  color: Theme.of(context).colorScheme.surface,
+                  icon: const Icon(Icons.more_vert),
                   onSelected: (value) {
-                    // Mock Actions
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('$value user ${st['name']}')),
                     );
@@ -152,11 +183,11 @@ class _StudentsScreenState extends State<StudentsScreen> {
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
                       value: 'Block',
-                      child: Text('Block User', style: TextStyle(color: AppTheme.statusRed)),
+                      child: Text('Block User', style: TextStyle(color: AppTokens.statusRed)),
                     ),
                     const PopupMenuItem<String>(
                       value: 'Remove',
-                      child: Text('Remove from Room', style: TextStyle(color: AppTheme.statusWarning)),
+                      child: Text('Remove from Course', style: TextStyle(color: AppTokens.statusWarning)),
                     ),
                   ],
                 ),
