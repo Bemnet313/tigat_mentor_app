@@ -5,6 +5,7 @@ import '../../features/students/screens/students_screen.dart';
 import '../../features/wallet/screens/wallet_screen.dart';
 import '../../features/courses/screens/courses_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
+import '../../features/community/screens/chat_screen.dart';
 import '../widgets/app_scaffold.dart';
 
 class AppRouter {
@@ -18,6 +19,12 @@ class AppRouter {
       GoRoute(
         path: '/community',
         builder: (context, state) => const AppScaffold(child: CommunityScreen()),
+      ),
+      GoRoute(
+        path: '/community/:roomId',
+        builder: (context, state) => ChatScreen(
+          roomId: state.pathParameters['roomId'] ?? '',
+        ),
       ),
       GoRoute(
         path: '/students',
