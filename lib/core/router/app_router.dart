@@ -6,6 +6,8 @@ import '../../features/wallet/screens/wallet_screen.dart';
 import '../../features/courses/screens/courses_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/community/screens/chat_screen.dart';
+import '../../features/posts/screens/posts_screen.dart';
+import '../../features/posts/screens/comment_screen.dart';
 import '../widgets/app_scaffold.dart';
 
 class AppRouter {
@@ -24,6 +26,18 @@ class AppRouter {
         path: '/community/:roomId',
         builder: (context, state) => ChatScreen(
           roomId: state.pathParameters['roomId'] ?? '',
+        ),
+      ),
+      // NEW: Posts tab
+      GoRoute(
+        path: '/posts',
+        builder: (context, state) => const AppScaffold(child: PostsScreen()),
+      ),
+      // NEW: Full-screen comment view (no AppScaffold = no bottom nav)
+      GoRoute(
+        path: '/posts/:postId/comments',
+        builder: (context, state) => CommentScreen(
+          postId: state.pathParameters['postId'] ?? '',
         ),
       ),
       GoRoute(

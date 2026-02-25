@@ -55,7 +55,7 @@ class CreateRoomModal extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
                 ),
               ),
-              value: 'Free',
+              initialValue: 'Free',
               items: const [
                 DropdownMenuItem(value: 'Free', child: Text('Free for All Students')),
                 DropdownMenuItem(value: 'Premium', child: Text('Premium Mentorship Only')),

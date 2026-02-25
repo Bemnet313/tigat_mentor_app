@@ -1,10 +1,11 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'core/localization/localization_provider.dart';
 import 'core/router/app_router.dart';
+import 'features/posts/providers/posts_provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,6 +18,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => LocalizationProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => PostsProvider()),
       ],
       child: const TigatMentorApp(),
     ),
@@ -37,8 +39,7 @@ class TigatMentorApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeProvider.themeMode,
-      // We mimic simple language switches by rebuilding the UI since we don't have proper arb files setup for flutter_localizations yet.
-      locale: Locale(localizationProvider.currentLocale), 
+      locale: Locale(localizationProvider.currentLocale),
       routerConfig: AppRouter.router,
     );
   }

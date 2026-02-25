@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/design/tokens.dart';
 import '../../../core/design/motion.dart';
 import '../../../core/widgets/app_text_field.dart';
+import '../../../core/mock_data/mock_data.dart';
+import '../../posts/models/post_model.dart';
+import '../../posts/providers/posts_provider.dart';
 
 class ContentCreatorModal {
   static void show(BuildContext context) {
@@ -86,6 +90,28 @@ class _CreatePostViewState extends State<_CreatePostView> {
             child: AppTapBehavior(
               child: FilledButton(
               onPressed: () {
+                // Map selected content type to PostType
+                final typeMap = {
+                  'Text': PostType.text,
+                  'Image': PostType.image,
+                  'Poll': PostType.poll,
+                  'Voice': PostType.voice,
+                  'Video': PostType.video,
+                  'PDF/Link': PostType.blog,
+                };
+                final postType = typeMap[_selectedContentType] ?? PostType.text;
+
+                final newPost = PostModel(
+                  id: 'new_${DateTime.now().millisecondsSinceEpoch}',
+                  type: postType,
+                  authorName: MockData.mentorName,
+                  authorAvatarUrl: MockData.profileImageUrl,
+                  isMentor: true,
+                  text: 'New post from $_selectedDestination — $_selectedContentType content',
+                  timestamp: DateTime.now(),
+                );
+
+                context.read<PostsProvider>().addPost(newPost);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Post Published Successfully!')),

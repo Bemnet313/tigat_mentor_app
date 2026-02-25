@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/localization/localization_provider.dart';
@@ -40,10 +41,71 @@ class DashboardScreen extends StatelessWidget {
       childAspectRatio: 1.4,
       children: [
         _buildKPICard(context, loc.translate('earnings'), '${MockData.currentMonthEarningsETB} ETB', Icons.account_balance_wallet, AppTokens.primaryOlive),
-        _buildKPICard(context, loc.translate('active_students'), '${MockData.activeStudents}', Icons.school, AppTokens.accentGlow),
+        // ── Active Students: warm, clickable card ──
+        _buildActiveStudentsCard(context, loc),
         _buildKPICard(context, loc.translate('new_followers'), '+${MockData.newFollowersMonthly}', Icons.favorite, AppTokens.statusWarning),
         _buildKPICard(context, loc.translate('pending_withdrawals'), '${MockData.pendingWithdrawalsETB} ETB', Icons.pending_actions, AppTokens.statusRed),
       ],
+    );
+  }
+
+  /// Special warm & clickable card for "Active Students"
+  Widget _buildActiveStudentsCard(BuildContext context, LocalizationProvider loc) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      onTap: () => context.go('/students'),
+      child: AppCard(
+        padding: EdgeInsets.zero,
+        margin: EdgeInsets.zero,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppTokens.radiusCard),
+            color: isDark
+                ? AppTokens.primaryOlive.withValues(alpha: 0.08)
+                : AppTokens.primaryOlive.withValues(alpha: 0.05),
+          ),
+          padding: const EdgeInsets.all(AppTokens.spacingMd),
+          child: Stack(
+            children: [
+              // Chevron top-right for interactivity hint
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Icon(
+                  Icons.chevron_right_rounded,
+                  size: 20,
+                  color: AppTokens.accentGlow.withValues(alpha: 0.7),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.school, size: 20, color: AppTokens.accentGlow),
+                      const SizedBox(width: AppTokens.spacingSm),
+                      Expanded(
+                        child: Text(
+                          loc.translate('active_students'),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${MockData.activeStudents}',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

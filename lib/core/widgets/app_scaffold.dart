@@ -144,9 +144,9 @@ class AppScaffold extends StatelessWidget {
     final loc = context.watch<LocalizationProvider>();
     int getIndex() {
       if (location.startsWith('/community')) return 0;
-      if (location.startsWith('/students')) return 1;
-      if (location.startsWith('/wallet')) return 2;
-      if (location.startsWith('/courses')) return 3;
+      if (location.startsWith('/posts')) return 1;
+      if (location.startsWith('/courses')) return 2;
+      if (location.startsWith('/wallet')) return 3;
       return -1; // Dashboard
     }
     
@@ -169,9 +169,9 @@ class AppScaffold extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(context, 0, currentIndex, Icons.people_outline, Icons.people, loc.translate('community'), '/community'),
-              _buildNavItem(context, 1, currentIndex, Icons.school_outlined, Icons.school, loc.translate('students'), '/students'),
-              _buildNavItem(context, 2, currentIndex, Icons.monetization_on_outlined, Icons.monetization_on, loc.translate('withdraw'), '/wallet'),
-              _buildNavItem(context, 3, currentIndex, Icons.play_lesson_outlined, Icons.play_lesson, loc.translate('my_courses'), '/courses'),
+              _buildNavItem(context, 1, currentIndex, Icons.dynamic_feed_outlined, Icons.dynamic_feed, loc.translate('posts'), '/posts'),
+              _buildNavItem(context, 2, currentIndex, Icons.play_lesson_outlined, Icons.play_lesson, loc.translate('my_courses'), '/courses'),
+              _buildNavItem(context, 3, currentIndex, Icons.monetization_on_outlined, Icons.monetization_on, loc.translate('withdraw'), '/wallet'),
             ],
           ),
         ),
