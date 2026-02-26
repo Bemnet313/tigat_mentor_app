@@ -76,7 +76,7 @@ class VideoLibraryPickerModal extends StatelessWidget {
                           color: Colors.black.withValues(alpha: 0.5),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.play_arrow, color: Colors.white),
+                        child: Icon(Icons.play_arrow, color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                     Positioned(
@@ -90,7 +90,7 @@ class VideoLibraryPickerModal extends StatelessWidget {
                         ),
                         child: Text(
                           video['duration'],
-                          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 10, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

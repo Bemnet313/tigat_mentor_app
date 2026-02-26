@@ -51,26 +51,34 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
         ),
       ),
+      dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+        ),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: const Color(0xFFFFFFFF),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           elevation: 2,
-          shadowColor: AppTokens.primaryOliveDark.withValues(alpha: 0.15),
+          shadowColor: AppTokens.primaryOlive.withValues(alpha: 0.15),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: const Color(0xFFFFFFFF),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           elevation: 2,
-          shadowColor: AppTokens.primaryOliveDark.withValues(alpha: 0.15),
+          shadowColor: AppTokens.primaryOlive.withValues(alpha: 0.15),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -127,9 +135,9 @@ class AppTheme {
   }
 
   static ThemeData get darkTheme {
-    const Color darkBackground = Color(0xFF0F1410);
-    const Color darkSurface = Color(0xFF161E17);
-    const Color darkTextPrimary = Color(0xFFF3F4F6);
+    const Color darkBackground = Color(0xFF102218); // Deep Forest
+    const Color darkSurface = Color(0xFF1A3324);   // Forest Overlay
+    const Color darkTextPrimary = Color(0xFFE7F3EC);
     const Color darkTextSecondary = Color(0xFFA1A1AA);
 
     final baseTextTheme = GoogleFonts.notoSansTextTheme().apply(
@@ -178,26 +186,34 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppTokens.radiusCard),
         ),
       ),
+      dialogTheme: DialogThemeData(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+        ),
+      ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: const Color(0xFFFFFFFF),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           elevation: 2,
-          shadowColor: AppTokens.overlayDark,
+          shadowColor: AppTokens.primaryOlive.withValues(alpha: 0.15),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: AppTokens.primaryOlive,
-          foregroundColor: AppTokens.backgroundLight,
+          foregroundColor: const Color(0xFFFFFFFF),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTokens.radiusPill),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           elevation: 2,
-          shadowColor: AppTokens.overlayDark,
+          shadowColor: AppTokens.primaryOlive.withValues(alpha: 0.15),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -209,15 +225,15 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          borderSide: const BorderSide(color: AppTokens.overlayLight),
+          borderSide: const BorderSide(color: AppTokens.primaryOlive, width: 1.0),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          borderSide: const BorderSide(color: AppTokens.overlayLight),
+          borderSide: const BorderSide(color: AppTokens.primaryOlive, width: 1.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),
-          borderSide: BorderSide(color: AppTokens.accentGlow.withValues(alpha: 0.5), width: 1.5),
+          borderSide: BorderSide(color: AppTokens.primaryOlive, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppTokens.radiusSmall),

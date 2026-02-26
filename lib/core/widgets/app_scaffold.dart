@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../design/tokens.dart';
 import '../mock_data/mock_data.dart';
 import '../localization/localization_provider.dart';
+import '../../features/students/screens/students_screen.dart';
 
 class AppScaffold extends StatelessWidget {
   final Widget child;
@@ -82,6 +83,17 @@ class AppScaffold extends StatelessWidget {
       title: _buildLogo(context),
       centerTitle: true,
       actions: [
+        // Export icon — only on Students route
+        if (location == '/students')
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: IconButton(
+              icon: const Icon(Icons.file_download_outlined, size: 22),
+              color: AppTokens.primaryOlive,
+              tooltip: 'Export Report',
+              onPressed: () => StudentsScreen.showExportDialog(context),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.only(right: 14),
           child: GestureDetector(

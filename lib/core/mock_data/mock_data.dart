@@ -22,11 +22,231 @@ class MockData {
   static const String bannerImageUrl = "https://picsum.photos/1280/720?random=1";
   static const String bankAccount = "CBE - 1000123456789";
 
-  // Students (Screen 5)
+  // Students (Screen 5) — 30 entries with rich CRM data
   static final List<Map<String, dynamic>> students = [
-    {"name": "Selamawit T.", "course": "Dart Masterclass", "status": "Active", "avatar": "https://i.pravatar.cc/150?img=5"},
-    {"name": "Ermias M.", "course": "Premium Community", "status": "Active", "avatar": "https://i.pravatar.cc/150?img=12"},
-    {"name": "Helen K.", "course": "Dart Masterclass", "status": "Expired", "avatar": "https://i.pravatar.cc/150?img=9"},
+    // ── Super Students (3 courses each) ──
+    {
+      'name': 'Selamawit T.', 'phone': '+251 911 223 344', 'email': 'selamawit@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=5', 'type': 'both', 'subStatus': 'paid',
+      'joinedDate': '2025-10-01', 'pricePaid': 500,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.90, 'price': 1500},
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.20, 'price': 900},
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.50, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Ermias M.', 'phone': '+251 922 334 455', 'email': 'ermias.m@outlook.com',
+      'avatar': 'https://i.pravatar.cc/150?img=12', 'type': 'both', 'subStatus': 'pending',
+      'joinedDate': '2025-11-15', 'pricePaid': 500,
+      'courses': [
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.65, 'price': 900},
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.45, 'price': 1500},
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.80, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ሄለን ከበደ', 'phone': '+251 933 445 566', 'email': 'helen.k@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=9', 'type': 'both', 'subStatus': 'expired',
+      'joinedDate': '2025-08-20', 'pricePaid': 500,
+      'courses': [
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.30, 'price': 1500},
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.10, 'price': 900},
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.55, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Dawit Z.', 'phone': '+251 944 556 677', 'email': 'dawitz@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=33', 'type': 'both', 'subStatus': 'paid',
+      'joinedDate': '2025-09-05', 'pricePaid': 500,
+      'courses': [
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.95, 'price': 900},
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.40, 'price': 1500},
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.70, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ትግስት ፋንታ', 'phone': '+251 955 667 788', 'email': 'tigist.f@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=44', 'type': 'both', 'subStatus': 'pending',
+      'joinedDate': '2025-12-01', 'pricePaid': 500,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.75, 'price': 1500},
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.35, 'price': 900},
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.60, 'price': 1500},
+      ],
+    },
+    // ── Subscribers Only ──
+    {
+      'name': 'Meron A.', 'phone': '+251 911 111 222', 'email': 'meron.a@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=47', 'type': 'subscriber', 'subStatus': 'paid',
+      'joinedDate': '2025-09-10', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'ቃልኪዳን በላይ', 'phone': '+251 922 222 333', 'email': 'kalkidan@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=16', 'type': 'subscriber', 'subStatus': 'paid',
+      'joinedDate': '2025-10-20', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'Abel C.', 'phone': '+251 933 333 444', 'email': 'abel.c@hotmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=60', 'type': 'subscriber', 'subStatus': 'pending',
+      'joinedDate': '2025-11-05', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'ብሩክ ታደሰ', 'phone': '+251 944 444 555', 'email': 'biruk.t@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=52', 'type': 'subscriber', 'subStatus': 'expired',
+      'joinedDate': '2025-07-15', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'Sara G.', 'phone': '+251 955 555 666', 'email': 'sara.g@outlook.com',
+      'avatar': 'https://i.pravatar.cc/150?img=23', 'type': 'subscriber', 'subStatus': 'paid',
+      'joinedDate': '2025-12-10', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'ናሆም ወልደ', 'phone': '+251 966 666 777', 'email': 'nahom.w@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=57', 'type': 'subscriber', 'subStatus': 'pending',
+      'joinedDate': '2025-11-28', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'Liya H.', 'phone': '+251 977 777 888', 'email': 'liya.h@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=29', 'type': 'subscriber', 'subStatus': 'expired',
+      'joinedDate': '2025-06-20', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'Yonas D.', 'phone': '+251 988 888 999', 'email': 'yonas.d@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=51', 'type': 'subscriber', 'subStatus': 'paid',
+      'joinedDate': '2025-10-05', 'pricePaid': 500, 'courses': [],
+    },
+    // ── Course Buyers Only ──
+    {
+      'name': 'ሰላም ገብረ', 'phone': '+251 911 999 000', 'email': 'selam.g@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=25', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-11-01', 'pricePaid': 1500,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.85, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Robel K.', 'phone': '+251 922 000 111', 'email': 'robel.k@outlook.com',
+      'avatar': 'https://i.pravatar.cc/150?img=53', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-10-15', 'pricePaid': 900,
+      'courses': [
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.60, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ሃና ተስፋዬ', 'phone': '+251 933 111 222', 'email': 'hana.t@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=32', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-09-20', 'pricePaid': 1500,
+      'courses': [
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.40, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Kidus B.', 'phone': '+251 944 222 333', 'email': 'kidus.b@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=55', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-12-05', 'pricePaid': 900,
+      'courses': [
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.25, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ፍሬሕይወት ለማ', 'phone': '+251 955 333 444', 'email': 'fre.l@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=38', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-08-10', 'pricePaid': 2400,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.70, 'price': 1500},
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.50, 'price': 900},
+      ],
+    },
+    {
+      'name': 'Michael S.', 'phone': '+251 966 444 555', 'email': 'michael.s@outlook.com',
+      'avatar': 'https://i.pravatar.cc/150?img=58', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-11-22', 'pricePaid': 1500,
+      'courses': [
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.15, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'ማህሌት ዘውዴ', 'phone': '+251 977 555 666', 'email': 'mahlet.z@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=41', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-10-30', 'pricePaid': 900,
+      'courses': [
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.90, 'price': 900},
+      ],
+    },
+    // ── Mixed Subscribers + Buyers (1-2 courses) ──
+    {
+      'name': 'Henok T.', 'phone': '+251 911 666 777', 'email': 'henok.t@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=61', 'type': 'both', 'subStatus': 'paid',
+      'joinedDate': '2025-09-15', 'pricePaid': 1400,
+      'courses': [
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.55, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ሩት አበበ', 'phone': '+251 922 777 888', 'email': 'ruth.a@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=28', 'type': 'both', 'subStatus': 'expired',
+      'joinedDate': '2025-07-01', 'pricePaid': 2000,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.35, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Bereket G.', 'phone': '+251 933 888 999', 'email': 'bereket.g@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=62', 'type': 'both', 'subStatus': 'pending',
+      'joinedDate': '2025-12-15', 'pricePaid': 1400,
+      'courses': [
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.80, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ፀሐይ ሙሉጌታ', 'phone': '+251 944 999 000', 'email': 'tsehay.m@outlook.com',
+      'avatar': 'https://i.pravatar.cc/150?img=36', 'type': 'both', 'subStatus': 'paid',
+      'joinedDate': '2025-08-30', 'pricePaid': 2000,
+      'courses': [
+        {'name': 'Digital Marketing', 'nameAm': 'ዲጂታል ማርኬቲንግ', 'progress': 0.65, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Eyob F.', 'phone': '+251 955 000 111', 'email': 'eyob.f@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=63', 'type': 'both', 'subStatus': 'expired',
+      'joinedDate': '2025-06-10', 'pricePaid': 1400,
+      'courses': [
+        {'name': 'Dart Masterclass', 'nameAm': 'የዳርት ማስተርክላስ', 'progress': 0.45, 'price': 900},
+      ],
+    },
+    {
+      'name': 'ማርያም ሰለሞን', 'phone': '+251 966 111 222', 'email': 'maryam.s@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=43', 'type': 'both', 'subStatus': 'pending',
+      'joinedDate': '2025-11-10', 'pricePaid': 2000,
+      'courses': [
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.20, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'Samuel W.', 'phone': '+251 977 222 333', 'email': 'samuel.w@hotmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=64', 'type': 'subscriber', 'subStatus': 'paid',
+      'joinedDate': '2025-10-25', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'መስከረም ይልማ', 'phone': '+251 988 333 444', 'email': 'meskerem.y@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=46', 'type': 'subscriber', 'subStatus': 'expired',
+      'joinedDate': '2025-05-15', 'pricePaid': 500, 'courses': [],
+    },
+    {
+      'name': 'Tewodros H.', 'phone': '+251 911 444 555', 'email': 'tewodros.h@yahoo.com',
+      'avatar': 'https://i.pravatar.cc/150?img=65', 'type': 'buyer', 'subStatus': null,
+      'joinedDate': '2025-12-20', 'pricePaid': 2400,
+      'courses': [
+        {'name': 'Flutter UI Animations', 'nameAm': 'ፍላተር UI አኒሜሽን', 'progress': 0.10, 'price': 900},
+        {'name': 'Python Fundamentals', 'nameAm': 'ፓይዘን መሰረታዊ', 'progress': 0.30, 'price': 1500},
+      ],
+    },
+    {
+      'name': 'ዘነበች ደስታ', 'phone': '+251 922 555 666', 'email': 'zenebech.d@gmail.com',
+      'avatar': 'https://i.pravatar.cc/150?img=35', 'type': 'subscriber', 'subStatus': 'pending',
+      'joinedDate': '2025-11-18', 'pricePaid': 500, 'courses': [],
+    },
   ];
   
   // Courses (Screen 6)

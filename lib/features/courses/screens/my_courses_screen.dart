@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:tigat_mentor_app/core/design/tokens.dart';
-import 'package:tigat_mentor_app/core/mock_data/course_mock_data.dart';
-import 'package:tigat_mentor_app/features/courses/models/course_model.dart';
-import 'package:tigat_mentor_app/features/courses/widgets/course_card.dart';
-import 'package:tigat_mentor_app/features/courses/screens/course_edit_screen.dart';
+import '../../../core/design/tokens.dart';
+import '../../../core/mock_data/course_mock_data.dart';
+import '../models/course_model.dart';
+import '../widgets/course_card.dart';
+import 'course_edit_screen.dart';
 
-class CoursesScreen extends StatefulWidget {
-  const CoursesScreen({super.key});
+class MyCoursesScreen extends StatefulWidget {
+  const MyCoursesScreen({super.key});
 
   @override
-  State<CoursesScreen> createState() => _CoursesScreenState();
+  State<MyCoursesScreen> createState() => _MyCoursesScreenState();
 }
 
-class _CoursesScreenState extends State<CoursesScreen> with SingleTickerProviderStateMixin {
+class _MyCoursesScreenState extends State<MyCoursesScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final List<Course> _publishedCourses = List.from(mockPublishedCourses);
   final List<Course> _draftCourses = List.from(mockDraftCourses);
@@ -60,6 +60,7 @@ class _CoursesScreenState extends State<CoursesScreen> with SingleTickerProvider
           ),
           ElevatedButton(
             onPressed: () {
+              // In a real app, verify password here
               if (passwordController.text.isNotEmpty) {
                 setState(() {
                   if (isPublished) {
@@ -74,10 +75,7 @@ class _CoursesScreenState extends State<CoursesScreen> with SingleTickerProvider
                 );
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTokens.statusRed,
-              foregroundColor: Theme.of(context).colorScheme.onError,
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: AppTokens.statusRed),
             child: const Text("Delete"),
           ),
         ],
@@ -151,18 +149,13 @@ class _CoursesScreenState extends State<CoursesScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent, // Background handled by AppScaffold/Theme
       appBar: AppBar(
         title: const Text("My Courses"),
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: Colors.transparent,
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: AppTokens.primaryOlive,
-          indicatorWeight: 3,
           labelColor: AppTokens.primaryOlive,
           unselectedLabelColor: AppTokens.textSecondary,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           indicatorSize: TabBarIndicatorSize.tab,
           tabs: const [
             Tab(text: "Published"),
@@ -183,16 +176,9 @@ class _CoursesScreenState extends State<CoursesScreen> with SingleTickerProvider
   Widget _buildCourseList(List<Course> courses, bool isPublished) {
     if (courses.isEmpty) {
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.video_library_outlined, size: 64, color: AppTokens.textTertiary.withValues(alpha: 0.5)),
-            const SizedBox(height: AppTokens.spacingMd),
-            Text(
-              isPublished ? "No published courses yet" : "No drafts yet",
-              style: const TextStyle(color: AppTokens.textSecondary, fontSize: 16),
-            ),
-          ],
+        child: Text(
+          isPublished ? "No published courses yet" : "No drafts yet",
+          style: const TextStyle(color: AppTokens.textSecondary),
         ),
       );
     }
