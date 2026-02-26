@@ -1,0 +1,9 @@
+✨ Brand Overhaul: The app is now fully synced with the Tigat Creator Studio aesthetic (Forest Green & Premium Gold).
+
+🪄 AI Content Lab: Tap the Magic Wand in "Create Post" to generate Amharic/English text or voice scripts with teleprompter support.
+
+📚 Course Management: New dashboard for mentors to edit, delete (password protected), or toggle visibility of published and draft courses.
+
+💸 Revenue Manager: Revamped UI for tracking earnings and managing subscription plans.
+
+🎞️ Library Integration: Video posts now pull directly from your existing Course Library.
